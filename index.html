@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Remedy.Dev — Cure for Developers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Azeret+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  /* Core palette */
+  --ink:#0b0d11;
+  --ink2:#12151c;
+  --ink3:#181d28;
+  --ink4:#1e2535;
+  --wire:#242e42;
+  --wire2:#2e3d58;
+  --fog:#8fa3c0;
+  --mist:#5a6e8a;
+  --smoke:#374457;
+  --text:#dce8f8;
+  --text2:#a8bcd4;
+
+  /* Accent system */
+  --lime:#a3e635;
+  --lime2:#84cc16;
+  --lime3:#4d7c0f;
+  --cyan:#22d3ee;
+  --cyan2:#06b6d4;
+  --violet:#a78bfa;
+  --violet2:#7c3aed;
+  --amber:#fbbf24;
+  --rose:#fb7185;
+  --emerald:#34d399;
+
+  /* Lang colors */
+  --clr-js:#f7df1e;
+  --clr-ts:#3178c6;
+  --clr-py:#3b82f6;
+  --clr-cs:#a78bfa;
+  --clr-go:#00acd7;
+  --clr-rs:#f74c00;
+  --clr-java:#ed8b00;
+  --clr-php:#8892bf;
+  --clr-rb:#cc342d;
+  --clr-kt:#7f52ff;
+  --clr-swift:#ff6b35;
+  --clr-cpp:#00599c;
+  --clr-dart:#0175c2;
+
+  --radius:10px;
+  --sidebar:280px;
+  --hdr:54px;
+  --t:.18s ease;
+  --ff-head:'Fraunces',serif;
+  --ff-body:'Space Grotesk',sans-serif;
+  --ff-mono:'Azeret Mono',monospace;
+  --shadow:0 8px 32px rgba(0,0,0,.5);
+}
+
+[data-theme="light"]{
+  --ink:#f4f7fc;--ink2:#ffffff;--ink3:#edf1f8;--ink4:#e0e8f4;
+  --wire:#c8d6ec;--wire2:#b0c4e0;--fog:#4a6280;--mist:#7a93b0;
+  --smoke:#c5d4e6;--text:#1a2540;--text2:#3a5070;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--text);font-family:var(--ff-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+::selection{background:rgba(163,230,53,.2);color:var(--lime)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--wire2);border-radius:99px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ═══ NOISE TEXTURE ═══ */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.6}
+
+/* ═══ HEADER ═══ */
+#hdr{
+  position:fixed;top:0;left:0;right:0;height:var(--hdr);
+  background:rgba(11,13,17,.88);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--wire);z-index:200;
+  display:flex;align-items:center;padding:0 16px;gap:12px
+}
+[data-theme="light"] #hdr{background:rgba(244,247,252,.92)}
+
+.logo-mark{
+  display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0
+}
+.logo-icon{
+  width:32px;height:32px;background:linear-gradient(135deg,var(--lime),var(--cyan));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0
+}
+.logo-text{
+  font-family:var(--ff-head);font-weight:700;font-size:18px;letter-spacing:-.5px;
+  color:var(--text)
+}
+.logo-text em{font-style:italic;color:var(--lime)}
+.logo-sub{font-family:var(--ff-mono);font-size:9px;color:var(--mist);letter-spacing:.08em;text-transform:uppercase;display:block;margin-top:-2px}
+
+.hdr-sep{width:1px;height:24px;background:var(--wire);flex-shrink:0}
+
+/* Search */
+#sw{position:relative;flex:1;max-width:320px}
+#si{
+  width:100%;background:var(--ink3);border:1px solid var(--wire);
+  border-radius:8px;padding:7px 12px 7px 32px;
+  color:var(--text);font-family:var(--ff-mono);font-size:12px;
+  outline:none;transition:all var(--t)
+}
+#si:focus{border-color:var(--lime);box-shadow:0 0 0 3px rgba(163,230,53,.1)}
+#si::placeholder{color:var(--mist)}
+.si-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--mist);font-size:13px;pointer-events:none}
+#sr{position:absolute;top:calc(100%+6px);left:0;min-width:340px;background:var(--ink2);border:1px solid var(--wire2);border-radius:var(--radius);box-shadow:var(--shadow);z-index:300;display:none;max-height:300px;overflow-y:auto}
+#sr.on{display:block}
+.sri{padding:8px 14px;cursor:pointer;border-bottom:1px solid var(--wire);font-size:12.5px}
+.sri:hover{background:var(--ink3)}.sri:last-child{border:none}
+.sri-tag{font-family:var(--ff-mono);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--lime);display:block;margin-bottom:1px}
+
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+
+.ib{
+  background:var(--ink3);border:1px solid var(--wire);border-radius:8px;
+  color:var(--fog);cursor:pointer;padding:6px 12px;font-size:12px;
+  font-family:var(--ff-body);display:flex;align-items:center;gap:5px;
+  transition:all var(--t);white-space:nowrap
+}
+.ib:hover{border-color:var(--lime);color:var(--lime)}
+.ib.prime{background:var(--lime3);border-color:var(--lime2);color:var(--lime)}
+.ib.prime:hover{background:var(--lime2);color:#000}
+.ib:disabled{opacity:.4;pointer-events:none}
+.ib .dot{width:6px;height:6px;border-radius:50%;background:var(--lime);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* Mobile sidebar toggle */
+.tog{display:none}
+
+/* ═══ LAYOUT ═══ */
+#app{display:flex;padding-top:var(--hdr);min-height:100vh}
+
+/* ═══ SIDEBAR ═══ */
+#sb{
+  position:fixed;top:var(--hdr);left:0;bottom:0;width:var(--sidebar);
+  background:var(--ink2);border-right:1px solid var(--wire);
+  overflow-y:auto;z-index:100;transition:transform var(--t)
+}
+#sbov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99}
+#sbov.on{display:block}
+
+.sb-section{padding:14px 0 4px}
+.sb-label{
+  font-family:var(--ff-mono);font-size:9px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--mist);
+  padding:0 16px;margin-bottom:6px
+}
+.sb-link{
+  display:flex;align-items:center;gap:9px;padding:8px 16px;
+  color:var(--fog);font-size:13px;cursor:pointer;
+  border-left:2px solid transparent;transition:all var(--t);
+  font-family:var(--ff-body);font-weight:500
+}
+.sb-link:hover{color:var(--text);background:var(--ink3);border-left-color:var(--wire2)}
+.sb-link.on{color:var(--lime);background:rgba(163,230,53,.07);border-left-color:var(--lime)}
+.sb-link .si{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.sb-sep{height:1px;background:var(--wire);margin:8px 14px}
+
+/* Drop zone in sidebar */
+.sb-drop{
+  margin:12px;border:2px dashed var(--wire2);border-radius:var(--radius);
+  padding:24px 16px;text-align:center;cursor:pointer;background:var(--ink3);
+  transition:all var(--t);position:relative;overflow:hidden
+}
+.sb-drop::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(163,230,53,.06),transparent 70%);opacity:0;transition:opacity .3s}
+.sb-drop:hover,.sb-drop.ov{border-color:var(--lime);background:rgba(163,230,53,.03)}
+.sb-drop:hover::before,.sb-drop.ov::before{opacity:1}
+.sd-ico{font-size:28px;display:block;margin-bottom:8px}
+.sd-t{font-family:var(--ff-head);font-size:13px;font-weight:700;margin-bottom:4px}
+.sd-s{font-size:11px;color:var(--mist);line-height:1.5}
+.sd-s b{color:var(--lime)}
+
+/* Stats chips in sidebar */
+.sb-stats{display:flex;flex-wrap:wrap;gap:6px;padding:0 12px 12px}
+.ssc{
+  flex:1;min-width:70px;background:var(--ink3);border:1px solid var(--wire);
+  border-radius:8px;padding:8px 10px;text-align:center
+}
+.ssc-v{font-family:var(--ff-head);font-size:18px;font-weight:700;color:var(--lime);display:block}
+.ssc-l{font-size:10px;color:var(--mist);margin-top:1px;font-family:var(--ff-mono)}
+
+/* File tree */
+#ft-wrap{padding:0 0 80px}
+.ft-node{font-size:12.5px}
+.ft-item{
+  display:flex;align-items:center;gap:7px;padding:5px 14px;
+  cursor:pointer;transition:background var(--t);white-space:nowrap
+}
+.ft-item:hover{background:rgba(255,255,255,.04)}
+.ft-item.on{background:rgba(163,230,53,.1);color:var(--lime)}
+.ft-tog{width:10px;height:10px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:var(--mist);flex-shrink:0;transition:transform .15s}
+.ft-tog.op{transform:rotate(90deg)}
+.ft-name{overflow:hidden;text-overflow:ellipsis;font-family:var(--ff-mono)}
+.ft-name.dir{color:var(--amber);font-weight:500}
+.ft-ext{
+  margin-left:auto;font-size:9px;padding:1px 5px;border-radius:3px;flex-shrink:0;
+  font-family:var(--ff-mono);border:1px solid;font-weight:500
+}
+.ft-ch{padding-left:14px;border-left:1px solid var(--wire)}
+.ft-ch.cl{display:none}
+
+/* ═══ MAIN ═══ */
+#main{margin-left:var(--sidebar);flex:1;min-width:0}
+
+/* ═══ VIEW SYSTEM ═══ */
+#main[data-view="land"] #land{display:flex}
+#main[data-view="land"] #prg{display:none}
+#main[data-view="land"] #docs-wrap{display:none}
+#main[data-view="prg"] #land{display:none}
+#main[data-view="prg"] #prg{display:flex}
+#main[data-view="prg"] #docs-wrap{display:none}
+#main[data-view="docs"] #land{display:none}
+#main[data-view="docs"] #prg{display:none}
+#main[data-view="docs"] #docs-wrap{display:block}
+
+/* ═══ LANDING ═══ */
+#land{
+  min-height:calc(100vh - var(--hdr));
+  flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 24px;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% -10%, rgba(163,230,53,.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(34,211,238,.06) 0%, transparent 50%)
+}
+.land-eyebrow{
+  font-family:var(--ff-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lime);margin-bottom:16px;display:flex;align-items:center;gap:8px
+}
+.land-eyebrow::before,.land-eyebrow::after{content:'';display:inline-block;width:32px;height:1px;background:var(--lime);opacity:.5}
+.land-h{
+  font-family:var(--ff-head);font-weight:700;font-size:clamp(32px,6vw,64px);
+  text-align:center;line-height:1.05;letter-spacing:-2px;margin-bottom:16px
+}
+.land-h em{font-style:italic;color:var(--lime)}
+.land-p{color:var(--text2);font-size:16px;text-align:center;max-width:520px;margin-bottom:40px;line-height:1.7}
+.land-p b{color:var(--text);font-weight:600}
+
+/* Pill inputs */
+.land-drop{
+  width:100%;max-width:580px;border:2px dashed var(--wire2);border-radius:20px;
+  padding:48px 32px;text-align:center;cursor:pointer;background:var(--ink2);
+  transition:all .3s;position:relative;overflow:hidden;margin-bottom:32px
+}
+.land-drop::before{content:'';position:absolute;inset:0;background:conic-gradient(from 90deg at 50% 50%,rgba(163,230,53,0) 0%,rgba(163,230,53,.08) 50%,rgba(163,230,53,0) 100%);opacity:0;transition:opacity .4s}
+.land-drop:hover,.land-drop.ov{border-color:var(--lime)}
+.land-drop:hover::before,.land-drop.ov::before{opacity:1}
+.ld-ico{font-size:52px;display:block;margin-bottom:16px;filter:drop-shadow(0 4px 16px rgba(163,230,53,.3))}
+.ld-t{font-family:var(--ff-head);font-size:21px;font-weight:700;margin-bottom:6px}
+.ld-s{color:var(--mist);font-size:13px;margin-bottom:20px;line-height:1.6}
+.btn-prime{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--lime2),var(--lime));
+  color:#0b0d11;border:none;padding:11px 28px;border-radius:99px;
+  font-family:var(--ff-body);font-weight:700;font-size:13px;
+  cursor:pointer;transition:all var(--t);letter-spacing:-.2px
+}
+.btn-prime:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(163,230,53,.35)}
+.ld-or{color:var(--mist);font-size:11px;margin-top:12px;font-family:var(--ff-mono)}
+
+/* Feature grid */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:640px;width:100%}
+.feat{background:var(--ink2);border:1px solid var(--wire);border-radius:var(--radius);padding:16px 14px;transition:all var(--t)}
+.feat:hover{border-color:var(--wire2);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.feat-ico{font-size:22px;margin-bottom:8px}
+.feat-t{font-family:var(--ff-body);font-weight:600;font-size:13px;margin-bottom:3px}
+.feat-d{color:var(--mist);font-size:11.5px;line-height:1.5}
+
+/* Lang strip */
+.lang-strip{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:32px;max-width:580px}
+.lang-pill{
+  display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:99px;
+  font-family:var(--ff-mono);font-size:11px;font-weight:500;border:1px solid;
+  transition:all var(--t);cursor:default
+}
+.lang-pill:hover{transform:translateY(-2px)}
+
+/* ═══ PROGRESS ═══ */
+#prg{
+  align-items:center;justify-content:center;flex-direction:column;
+  min-height:calc(100vh - var(--hdr));padding:40px
+}
+.prg-ring{width:60px;height:60px;border:3px solid var(--wire);border-top-color:var(--lime);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:24px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.prg-t{font-family:var(--ff-head);font-size:24px;font-weight:700;margin-bottom:6px}
+.prg-s{color:var(--text2);margin-bottom:28px;font-style:italic}
+.prg-bar{width:100%;max-width:440px;background:var(--ink3);border-radius:99px;height:6px;overflow:hidden;margin-bottom:0}
+.prg-fill{height:100%;background:linear-gradient(90deg,var(--lime2),var(--lime),var(--cyan));border-radius:99px;transition:width .25s ease;box-shadow:0 0 8px rgba(163,230,53,.4)}
+.prg-log{
+  width:100%;max-width:440px;background:var(--ink2);border:1px solid var(--wire);
+  border-radius:var(--radius);padding:12px;font-family:var(--ff-mono);font-size:11px;
+  color:var(--text2);max-height:160px;overflow-y:auto;line-height:1.8
+}
+.pll{color:var(--mist)}.pll.ok{color:var(--lime)}
+
+/* ═══ DOCS ═══ */
+#docs{display:block;padding:0;max-width:100%}
+.sec-wrap{padding:32px 48px 80px;max-width:880px}
+.ds{margin-bottom:64px;scroll-margin-top:80px}
+.sbadge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(163,230,53,.1);border:1px solid rgba(163,230,53,.25);
+  color:var(--lime);padding:3px 12px;border-radius:99px;
+  font-family:var(--ff-mono);font-size:10px;font-weight:500;margin-bottom:10px
+}
+.stitle{font-family:var(--ff-head);font-weight:700;font-size:clamp(20px,3.5vw,30px);letter-spacing:-.5px;line-height:1.15;margin-bottom:10px}
+.sdesc{color:var(--text2);font-size:14.5px;margin-bottom:22px;max-width:640px}
+
+/* Cards */
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:20px}
+.card{background:var(--ink2);border:1px solid var(--wire);border-radius:var(--radius);padding:14px 16px;transition:all var(--t)}
+.card:hover{border-color:var(--wire2);transform:translateY(-2px)}
+.ci{font-size:20px;margin-bottom:8px}.cl{font-family:var(--ff-mono);font-size:9.5px;color:var(--mist);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+.cv{font-family:var(--ff-head);font-weight:700;font-size:16px;color:var(--text)}.cs2{color:var(--mist);font-size:11px;margin-top:2px}
+
+/* Code blocks */
+.cb{background:var(--ink2);border:1px solid var(--wire);border-radius:var(--radius);overflow:hidden;margin-bottom:16px}
+.cbh{background:var(--ink3);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--wire)}
+.cbl{font-family:var(--ff-mono);font-size:9.5px;color:var(--mist);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:6px}
+.cbl::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime)}
+.cpb{background:none;border:1px solid var(--wire);color:var(--mist);cursor:pointer;font-size:10px;font-family:var(--ff-mono);padding:3px 9px;border-radius:5px;transition:all var(--t);display:flex;align-items:center;gap:4px}
+.cpb:hover{border-color:var(--lime);color:var(--lime)}
+pre{padding:18px;overflow-x:auto;font-family:var(--ff-mono);font-size:12px;line-height:1.75;color:var(--text)}
+
+/* Syntax */
+.kw{color:#c792ea}.str{color:#a3e635}.cm{color:var(--mist);font-style:italic}.at{color:#22d3ee}.nm{color:#fbbf24}.fn{color:#60a5fa}.ty{color:#e5c07b}
+
+/* Badges */
+.bdg{padding:3px 11px;border-radius:99px;font-family:var(--ff-mono);font-size:10.5px;font-weight:500;border:1px solid;display:inline-block}
+.bdg-g{background:rgba(163,230,53,.1);border-color:rgba(163,230,53,.3);color:var(--lime)}
+.bdg-b{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.3);color:var(--cyan)}
+.bdg-v{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.3);color:var(--violet)}
+.bdg-a{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:var(--amber)}
+.bdg-r{background:rgba(251,113,133,.1);border-color:rgba(251,113,133,.3);color:var(--rose)}
+.bdg-e{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.3);color:var(--emerald)}
+.bdg-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+
+/* Callouts */
+.call{border-left:3px solid;border-radius:0 var(--radius) var(--radius) 0;padding:12px 16px;margin-bottom:16px;font-size:13px;line-height:1.6}
+.call-i{border-color:var(--cyan);background:rgba(34,211,238,.06)}
+.call-s{border-color:var(--lime);background:rgba(163,230,53,.06)}
+.call-w{border-color:var(--amber);background:rgba(251,191,36,.06)}
+.call strong{font-family:var(--ff-body);font-weight:600;display:block;margin-bottom:3px}
+
+/* Steps */
+.steps{margin-bottom:16px}
+.step{display:flex;gap:14px;margin-bottom:10px;padding:14px;background:var(--ink2);border:1px solid var(--wire);border-radius:var(--radius);transition:border-color var(--t)}
+.step:hover{border-color:var(--wire2)}
+.sn{min-width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--lime2),var(--lime));color:#0b0d11;display:flex;align-items:center;justify-content:center;font-family:var(--ff-head);font-weight:700;font-size:12px;flex-shrink:0}
+.sc .st{font-family:var(--ff-body);font-weight:600;font-size:13px;margin-bottom:4px}
+.sc p,.sc code{color:var(--text2);font-size:12.5px}
+
+/* Table */
+.dt{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12.5px}
+.dt th{background:var(--ink3);padding:9px 13px;text-align:left;font-family:var(--ff-mono);font-weight:500;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--fog);border-bottom:2px solid var(--wire2)}
+.dt td{padding:9px 13px;border-bottom:1px solid var(--wire);color:var(--text2);vertical-align:top}
+.dt tr:last-child td{border:none}.dt tr:hover td{background:var(--ink3)}
+.dt code{background:var(--ink3);padding:2px 6px;border-radius:4px;font-family:var(--ff-mono);font-size:10.5px;color:var(--cyan)}
+
+/* Endpoints */
+.ep{background:var(--ink2);border:1px solid var(--wire);border-radius:var(--radius);margin-bottom:8px;overflow:hidden}
+.eph{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background var(--t)}
+.eph:hover{background:var(--ink3)}
+.mth{font-family:var(--ff-mono);font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;min-width:52px;text-align:center;letter-spacing:.04em}
+.GET{background:rgba(163,230,53,.15);color:var(--lime);border:1px solid rgba(163,230,53,.3)}
+.POST{background:rgba(34,211,238,.15);color:var(--cyan);border:1px solid rgba(34,211,238,.3)}
+.PUT{background:rgba(251,191,36,.15);color:var(--amber);border:1px solid rgba(251,191,36,.3)}
+.DELETE{background:rgba(251,113,133,.15);color:var(--rose);border:1px solid rgba(251,113,133,.3)}
+.PATCH{background:rgba(167,139,250,.15);color:var(--violet);border:1px solid rgba(167,139,250,.3)}
+.eppath{font-family:var(--ff-mono);font-size:12px;color:var(--text);flex:1}
+.epd{color:var(--mist);font-size:11px}
+.epb{padding:0 14px 14px;display:none}
+.epb.on{display:block}
+
+/* Improvements */
+.imp{display:flex;gap:10px;align-items:flex-start;padding:12px;background:var(--ink2);border:1px solid var(--wire);border-radius:var(--radius);margin-bottom:8px}
+.imp-lv{font-family:var(--ff-mono);font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px;flex-shrink:0;margin-top:2px;letter-spacing:.04em}
+.lv-h{background:rgba(251,113,133,.15);color:var(--rose);border:1px solid rgba(251,113,133,.3)}
+.lv-m{background:rgba(251,191,36,.15);color:var(--amber);border:1px solid rgba(251,191,36,.3)}
+.lv-l{background:rgba(163,230,53,.15);color:var(--lime);border:1px solid rgba(163,230,53,.3)}
+.it .it-t{font-family:var(--ff-body);font-weight:600;font-size:13px;margin-bottom:2px}
+.it .it-d{color:var(--text2);font-size:12px}
+
+/* Banner */
+#dbanner{
+  background:linear-gradient(135deg,rgba(163,230,53,.1),rgba(34,211,238,.06));
+  border:1px solid rgba(163,230,53,.2);border-radius:var(--radius);
+  padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:13px
+}
+#dbanner .tag{font-family:var(--ff-mono);font-size:9px;background:var(--lime2);color:#0b0d11;padding:2px 7px;border-radius:4px;flex-shrink:0;font-weight:700;letter-spacing:.06em}
+
+/* Arch diagram */
+.arch-box{background:var(--ink2);border:1px solid var(--wire);border-radius:var(--radius);padding:20px;overflow-x:auto;margin-bottom:16px}
+.arch-box pre{background:none;border:none;padding:0;font-size:11.5px;color:var(--text2)}
+
+/* File sections in combined view */
+.fs-sec{border-bottom:1px solid var(--wire)}
+.fs-head{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;
+  background:var(--ink2);transition:background var(--t);
+  border-bottom:1px solid var(--wire);position:sticky;top:0;z-index:5
+}
+.fs-head:hover{background:var(--ink3)}
+.fs-role-tags{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+.role-tag{font-size:9.5px;padding:2px 9px;border-radius:99px;font-weight:600;letter-spacing:.03em;border:1px solid}
+.rt-ctrl{background:rgba(163,230,53,.12);color:var(--lime);border-color:rgba(163,230,53,.3)}
+.rt-api{background:rgba(34,211,238,.12);color:var(--cyan);border-color:rgba(34,211,238,.3)}
+.rt-model{background:rgba(167,139,250,.12);color:var(--violet);border-color:rgba(167,139,250,.3)}
+.rt-svc{background:rgba(251,191,36,.12);color:var(--amber);border-color:rgba(251,191,36,.3)}
+.rt-mw{background:rgba(251,113,133,.12);color:var(--rose);border-color:rgba(251,113,133,.3)}
+.rt-cfg{background:rgba(52,211,153,.12);color:var(--emerald);border-color:rgba(52,211,153,.3)}
+.rt-generic{background:rgba(255,255,255,.05);color:var(--fog);border-color:var(--wire)}
+.fs-expl{
+  margin:0 14px 0;padding:10px 14px;background:var(--ink3);
+  border-left:3px solid var(--lime);font-size:11.5px;color:var(--text2);line-height:1.7;
+  border-radius:0 6px 6px 0
+}
+.fs-expl strong{color:var(--text)}
+.fs-body.cl{display:none}
+
+/* README section */
+.readme-out{
+  background:var(--ink2);border:1px solid var(--wire);border-radius:var(--radius);
+  padding:24px;font-family:var(--ff-mono);font-size:12.5px;line-height:1.8;
+  white-space:pre-wrap;word-break:break-word;color:var(--text2);
+  max-height:600px;overflow-y:auto
+}
+
+/* Combined view stats bar */
+.stats-bar{
+  display:flex;background:var(--ink2);border-bottom:1px solid var(--wire)
+}
+.stat{flex:1;padding:14px 20px;border-right:1px solid var(--wire);text-align:center}
+.stat:last-child{border:none}
+.stat-v{font-family:var(--ff-head);font-size:20px;font-weight:700;color:var(--lime)}
+.stat-l{font-size:9.5px;color:var(--mist);text-transform:uppercase;letter-spacing:.1em;margin-top:1px;font-family:var(--ff-mono)}
+
+/* Tabs */
+.tabs-row{
+  display:flex;background:var(--ink2);border-bottom:1px solid var(--wire);
+  padding:0 16px;gap:0;overflow-x:auto;position:sticky;top:var(--hdr);z-index:50
+}
+.tab-btn{
+  padding:11px 18px;font-size:12.5px;cursor:pointer;color:var(--mist);
+  border-bottom:2px solid transparent;transition:all var(--t);white-space:nowrap;
+  display:flex;align-items:center;gap:6px;font-family:var(--ff-body);font-weight:500
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.on{color:var(--lime);border-bottom-color:var(--lime)}
+.tab-count{background:var(--lime);color:#0b0d11;font-size:9px;padding:1px 6px;border-radius:99px;font-weight:700;font-family:var(--ff-mono)}
+
+.pane{display:none;padding:0}.pane.on>*:first-child{animation:fadeUp .3s ease both}
+.pane.on{display:block}
+
+/* Combined inner */
+#pane-combined{min-height:calc(100vh - var(--hdr) - 48px)}
+#pane-combined .comb-header{
+  padding:18px 24px;display:flex;align-items:center;justify-content:space-between;
+  background:var(--ink2);border-bottom:1px solid var(--wire);position:sticky;top:calc(var(--hdr)+48px);z-index:20
+}
+.comb-title{font-family:var(--ff-head);font-size:16px;font-weight:700}
+.comb-meta{font-size:11px;color:var(--mist);margin-top:2px}
+
+/* Welcome */
+.pane-welcome{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:calc(100vh - var(--hdr) - 48px);padding:40px;
+  background:radial-gradient(ellipse 60% 40% at 50% 50%,rgba(163,230,53,.04),transparent 70%)
+}
+.pw-h{font-family:var(--ff-head);font-size:clamp(22px,4vw,40px);font-weight:700;letter-spacing:-.5px;text-align:center;margin-bottom:10px}
+.pw-p{color:var(--text2);font-size:14px;text-align:center;max-width:480px;margin-bottom:28px;line-height:1.7}
+
+/* Responsive */
+@media(max-width:860px){.sec-wrap{padding:24px 18px 80px}}
+@media(max-width:760px){
+  #sb{transform:translateX(-100%)}#sb.on{transform:translateX(0)}
+  #sbov.on{display:block}#main{margin-left:0}.tog{display:flex}
+  .feat-grid{grid-template-columns:1fr 1fr}.tabs-row{gap:0}
+}
+@media(max-width:500px){
+  .feat-grid{grid-template-columns:1fr}.sec-wrap{padding:14px 12px 80px}
+  .land-h{letter-spacing:-1px}.cg{grid-template-columns:1fr 1fr}
+}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fi{animation:fadeUp .4s ease both}
+.fi1{animation-delay:.05s}.fi2{animation-delay:.1s}.fi3{animation-delay:.15s}.fi4{animation-delay:.2s}
+
+/* Line numbers */
+.ln{color:var(--smoke);user-select:none;min-width:30px;display:inline-block;text-align:right;margin-right:18px;font-size:10.5px}
+
+input[type="file"]{display:none}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:9000;
+  background:var(--ink3);border:1px solid var(--lime);border-radius:10px;
+  padding:10px 18px;font-size:12px;color:var(--lime);font-family:var(--ff-mono);
+  opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none
+}
+.toast.on{opacity:1;transform:translateY(0)}
+
+/* README editor */
+.readme-editor{
+  width:100%;min-height:200px;background:var(--ink2);border:1px solid var(--wire);
+  border-radius:var(--radius);padding:16px;font-family:var(--ff-mono);font-size:12px;
+  color:var(--text);resize:vertical;outline:none;line-height:1.7;
+  transition:border-color var(--t)
+}
+.readme-editor:focus{border-color:var(--lime)}
+</style>
+</head>
+<body>
+
+<input type="file" id="fi-main" webkitdirectory directory multiple/>
+
+<header id="hdr">
+  <button class="ib tog" onclick="toggleSb()">☰</button>
+  <a class="logo-mark" href="#" onclick="resetLanding();return false">
+    <div class="logo-icon">💊</div>
+    <div>
+      <div class="logo-text">Remedy<em>.Dev</em></div>
+      <span class="logo-sub">cure for developers</span>
+    </div>
+  </a>
+  <div class="hdr-sep"></div>
+  <div id="sw">
+    <span class="si-icon">⌕</span>
+    <input type="text" id="si" placeholder="Search docs…" autocomplete="off"/>
+    <div id="sr"></div>
+  </div>
+  <div id="sw">
+      <div class="logo-text">By<em> Anshad.Dev</em></div>
+  </div>
+  <div class="hdr-right">
+    <button class="ib prime" id="btn-exp" disabled onclick="exportCombined()">⬇ Export .txt</button>
+    <button class="ib" onclick="toggleTheme()"><span id="thI">☀️</span></button>
+  </div>
+</header>
+
+<div id="sbov" onclick="toggleSb()"></div>
+
+<nav id="sb">
+  <div id="sb-inner">
+    <!-- initial state -->
+    <div class="sb-section">
+      <div class="sb-label">Getting Started</div>
+      <div class="sb-link on" onclick="resetLanding()"><span class="si">🏠</span>Home</div>
+      <div class="sb-link" onclick="triggerImport()"><span class="si">📂</span>Import Project</div>
+    </div>
+    <div class="sb-sep"></div>
+    <div class="sb-section">
+      <div class="sb-label">Supported</div>
+      <div class="sb-drop" id="sb-dz" onclick="triggerImport()" ondragover="sbDzOv(event)" ondragleave="sbDzLv()" ondrop="sbDzDrop(event)">
+        <span class="sd-ico">📦</span>
+        <div class="sd-t">Drop Folder Here</div>
+        <div class="sd-s">Any language ·<br/><b>JS, TS, Python, C#, Go,<br/>Rust, Java, PHP, Ruby…</b></div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main id="main" data-view="land">
+
+  <!-- ═══ LANDING ═══ -->
+  <section id="land" class="fi">
+    <div class="land-eyebrow">Your code · Your docs</div>
+    <h1 class="land-h">The <em>Remedy</em><br/>for Dev Time</h1>
+    <p class="land-p">
+      Drop <b>any project folder</b> — get instant code examination, architecture analysis, API docs, GitHub README, and full workflow maps. Works with <b>every language and framework</b>.
+    </p>
+    <div class="lang-strip">
+      <span class="lang-pill" style="background:rgba(247,223,30,.08);border-color:rgba(247,223,30,.3);color:#f7df1e">JS</span>
+      <span class="lang-pill" style="background:rgba(49,120,198,.08);border-color:rgba(49,120,198,.3);color:#82b4ff">TS</span>
+      <span class="lang-pill" style="background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.3);color:#93c5fd">Python</span>
+      <span class="lang-pill" style="background:rgba(167,139,250,.08);border-color:rgba(167,139,250,.3);color:#c4b5fd">C#</span>
+      <span class="lang-pill" style="background:rgba(0,172,215,.08);border-color:rgba(0,172,215,.3);color:#67d2ef">Go</span>
+      <span class="lang-pill" style="background:rgba(247,76,0,.08);border-color:rgba(247,76,0,.3);color:#fda07a">Rust</span>
+      <span class="lang-pill" style="background:rgba(237,139,0,.08);border-color:rgba(237,139,0,.3);color:#fdc96a">Java</span>
+      <span class="lang-pill" style="background:rgba(136,146,191,.08);border-color:rgba(136,146,191,.3);color:#b0b8d9">PHP</span>
+      <span class="lang-pill" style="background:rgba(204,52,45,.08);border-color:rgba(204,52,45,.3);color:#f5908d">Ruby</span>
+      <span class="lang-pill" style="background:rgba(127,82,255,.08);border-color:rgba(127,82,255,.3);color:#b39dff">Kotlin</span>
+      <span class="lang-pill" style="background:rgba(255,107,53,.08);border-color:rgba(255,107,53,.3);color:#ffb08a">Swift</span>
+      <span class="lang-pill" style="background:rgba(1,117,194,.08);border-color:rgba(1,117,194,.3);color:#6bb9f0">Dart</span>
+    </div>
+    <div class="land-drop" id="ld" ondragover="ldOv(event)" onclick="triggerImport()" ondragleave="ldLv()" ondrop="ldDrop(event)">
+      <span class="ld-ico">💊</span>
+      <div class="ld-t">Drop your project folder</div>
+      <div class="ld-s">Scans source files · extracts dev code · excludes build artifacts<br/>Works with monorepos, microservices, CLI tools, APIs, fullstack apps</div>
+      <button class="btn-prime" onclick="triggerImport()">📂 &nbsp;Select Folder</button>
+      <div class="ld-or">or drag & drop above ↑</div>
+    </div>
+    <div class="feat-grid">
+      <div class="feat fi fi1"><div class="feat-ico">🔬</div><div class="feat-t">Deep Code Scan</div><div class="feat-d">Reads every source file, excludes node_modules, dist, build, .git</div></div>
+      <div class="feat fi fi2"><div class="feat-ico">🗺️</div><div class="feat-t">Architecture Map</div><div class="feat-d">Auto-detects layers, patterns, frameworks and project structure</div></div>
+      <div class="feat fi fi3"><div class="feat-ico">📋</div><div class="feat-t">Copy & Export</div><div class="feat-d">Combine all source into one annotated file — perfect for AI prompts</div></div>
+      <div class="feat fi fi1"><div class="feat-ico">🔌</div><div class="feat-t">API Discovery</div><div class="feat-d">Finds routes, endpoints, handlers across Express, FastAPI, Rails, ASP.NET…</div></div>
+      <div class="feat fi fi2"><div class="feat-ico">📝</div><div class="feat-t">README Builder</div><div class="feat-d">Generates a production-ready GitHub README from your actual code</div></div>
+      <div class="feat fi fi3"><div class="feat-ico">💡</div><div class="feat-t">Improvements</div><div class="feat-d">Prioritized suggestions based on what's missing from your project</div></div>
+    </div>
+  </section>
+
+  <!-- ═══ PROGRESS ═══ -->
+  <section id="prg">
+    <div class="prg-ring"></div>
+    <div class="prg-t">Diagnosing Project…</div>
+    <p class="prg-s">Extracting insights from your codebase</p>
+    <div style="display:flex;align-items:center;gap:12px;width:100%;max-width:440px;margin-bottom:6px">
+      <div class="prg-bar" style="margin:0;flex:1"><div class="prg-fill" id="pfill" style="width:0%"></div></div>
+      <span id="pct" style="font-family:var(--ff-mono);font-size:12px;color:var(--lime);min-width:36px;text-align:right">0%</span>
+    </div>
+    <div style="display:flex;gap:16px;margin-bottom:16px;font-family:var(--ff-mono);font-size:11px;color:var(--mist)">
+      <span>📄 <span id="p-total">0</span> files</span>
+      <span>💻 <span id="p-src">0</span> source</span>
+      <span>🔌 <span id="p-api">0</span> APIs</span>
+    </div>
+    <div class="prg-log" id="plog"></div>
+    <button class="ib" style="margin-top:14px;font-size:11px" onclick="resetLanding()">✕ Cancel</button>
+  </section>
+
+  <!-- ═══ DOCS AREA ═══ -->
+  <div id="docs-wrap">
+    <div class="tabs-row">
+      <div class="tab-btn on" id="tb-overview" onclick="switchTab('overview')">📋 Overview</div>
+      <div class="tab-btn" id="tb-combined" onclick="switchTab('combined')">🔗 Source Files <span class="tab-count" id="src-count">0</span></div>
+      <div class="tab-btn" id="tb-arch" onclick="switchTab('arch')">🏗️ Architecture</div>
+      <div class="tab-btn" id="tb-api" onclick="switchTab('api')">🔌 APIs <span class="tab-count" id="api-count">0</span></div>
+      <div class="tab-btn" id="tb-stack" onclick="switchTab('stack')">⚙️ Stack</div>
+      <div class="tab-btn" id="tb-setup" onclick="switchTab('setup')">🚀 Setup</div>
+      <div class="tab-btn" id="tb-readme" onclick="switchTab('readme')">📝 README</div>
+      <div class="tab-btn" id="tb-improve" onclick="switchTab('improve')">💡 Improve</div>
+    </div>
+    <div id="docs">
+      <div id="pane-overview" class="pane on"></div>
+      <div id="pane-combined" class="pane"></div>
+      <div id="pane-arch" class="pane"></div>
+      <div id="pane-api" class="pane"></div>
+      <div id="pane-stack" class="pane"></div>
+      <div id="pane-setup" class="pane"></div>
+      <div id="pane-readme" class="pane"></div>
+      <div id="pane-improve" class="pane"></div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════
+const S = {
+  name:'', files:[], tree:null, a:{},
+  srcContents:[],       // { file, text, path, lang }
+  activeTab:'overview'
+};
+
+// ═══ THEME ═══
+function toggleTheme(){
+  const t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  document.getElementById('thI').textContent=t==='dark'?'☀️':'🌙';
+}
+
+// ═══ SIDEBAR ═══
+function toggleSb(){
+  document.getElementById('sb').classList.toggle('on');
+  document.getElementById('sbov').classList.toggle('on');
+}
+
+// ═══ FILE INPUT ═══
+const fiMain=document.getElementById('fi-main');
+fiMain.addEventListener('change',async()=>{
+  const files=[...fiMain.files];
+  if(!files.length)return;
+  const first=files[0].webkitRelativePath||files[0].name;
+  S.name=first.split('/')[0]||'Project';
+  const mapped=files.filter(f=>!skip(f.webkitRelativePath||f.name))
+    .map(f=>({name:f.name,path:f.webkitRelativePath||f.name,size:f.size,file:f}));
+  await startAnalysis(mapped);
+});
+
+function triggerImport(){fiMain.value='';fiMain.click();}
+
+// ═══ SKIP FILTER — excludes build/generated artifacts ═══
+function skip(path){
+  return /[\/\\](node_modules|\.git|\.svn|dist|build|out|\.next|\.nuxt|__pycache__|\.pytest_cache|venv|env|\.venv|bin|obj|\.vs|vendor|Pods|\.idea|\.vscode|coverage|\.nyc_output|\.cache|\.parcel-cache|public\/build|static\/build)[\/\\]/i.test('/'+path)
+    || /\.(min\.js|min\.css|bundle\.js|chunk\.js|map|lock|sum|log|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf|zip|tar|gz|exe|dll|pdb|suo|user)$/i.test(path);
+}
+
+// ═══ DRAG & DROP — landing ═══
+function ldOv(e){e.preventDefault();document.getElementById('ld').classList.add('ov');}
+function ldLv(){document.getElementById('ld').classList.remove('ov');}
+async function ldDrop(e){
+  e.preventDefault();ldLv();
+  const items=[...e.dataTransfer.items];
+  const folderItem=items.find(i=>i.webkitGetAsEntry&&i.webkitGetAsEntry()?.isDirectory);
+  if(folderItem){
+    const entry=folderItem.webkitGetAsEntry();
+    S.name=entry.name;
+    const all=[];await readEntry(entry,all,'');await startAnalysis(all);
+  } else {
+    const files=[...e.dataTransfer.files];
+    if(files.length){S.name='DroppedProject';const mapped=files.map(f=>({name:f.name,path:f.name,size:f.size,file:f}));await startAnalysis(mapped);}
+  }
+}
+
+// ═══ SIDEBAR DROP ═══
+function sbDzOv(e){e.preventDefault();document.getElementById('sb-dz').classList.add('ov');}
+function sbDzLv(){document.getElementById('sb-dz').classList.remove('ov');}
+async function sbDzDrop(e){e.preventDefault();sbDzLv();await ldDrop(e);}
+
+// ═══ READ ENTRY ═══
+function readEntry(entry,files,path){
+  return new Promise(res=>{
+    if(entry.isFile){
+      entry.file(f=>{
+        const fp=path+f.name;
+        if(!skip(fp))files.push({name:f.name,path:fp,size:f.size,file:f});
+        res();
+      },res);
+    } else {
+      const reader=entry.createReader();
+      const readAll=cb=>{
+        reader.readEntries(async entries=>{
+          if(!entries.length)return cb();
+          await Promise.all(entries.map(en=>readEntry(en,files,path+entry.name+'/')));
+          readAll(cb);
+        });
+      };
+      readAll(res);
+    }
+  });
+}
+
+// ═══ PIPELINE ═══
+async function startAnalysis(files){
+  S.files=files;
+  document.getElementById('main').dataset.view='prg';
+  // Reset progress counters
+  const pt=document.getElementById('p-total');if(pt)pt.textContent=files.length;
+  const ps=document.getElementById('p-src');if(ps)ps.textContent='0';
+  const pa=document.getElementById('p-api');if(pa)pa.textContent='0';
+  document.getElementById('plog').innerHTML='';
+  document.getElementById('pfill').style.width='0%';
+  const pct=document.getElementById('pct');if(pct)pct.textContent='0%';
+  await analyze(files);
+  renderAll();
+}
+
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const raf=()=>new Promise(r=>requestAnimationFrame(r));
+
+function plog(msg,ok=false){
+  const el=document.getElementById('plog');
+  const d=document.createElement('div');d.className='pll'+(ok?' ok':'');
+  d.textContent='> '+msg;el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+function pfill(p){
+  document.getElementById('pfill').style.width=p+'%';
+  const pct=document.getElementById('pct');if(pct)pct.textContent=Math.round(p)+'%';
+  const pt=document.getElementById('p-total');if(pt)pt.textContent=S.files.length;
+  const ps=document.getElementById('p-src');if(ps)ps.textContent=S.srcContents.length;
+  const pa=document.getElementById('p-api');if(pa&&S.a.apis)pa.textContent=S.a.apis.length;
+}
+function pstatus(msg){document.querySelector('.prg-s').textContent=msg;}
+
+// ═══ ANALYSIS (fast parallel pipeline) ═══
+async function analyze(files){
+  const a=S.a;
+
+  // STEP 1 — instant metadata (synchronous, no I/O)
+  pfill(8);plog(`Found ${files.length} files — scanning…`);
+  await raf();
+  a.byExt={};
+  files.forEach(f=>{const e=f.name.split('.').pop().toLowerCase();(a.byExt[e]=a.byExt[e]||[]).push(f);});
+  a.lang=detectLang(files,a.byExt);
+  a.framework=detectFramework(files,a.byExt);
+  S.tree=buildTree(files);
+  pfill(18);plog(`Language: ${a.lang.primary} · Framework: ${(a.framework||[]).join(', ')}`);
+  await raf();
+
+  // STEP 2 — read config/package files first (tiny, fast)
+  pfill(25);plog('Reading package manifests…');pstatus('Reading dependencies…');
+  await raf();
+  a.packages=await extractPackages(files);
+  pfill(35);plog(`Found ${a.packages.length} packages`);
+  await raf();
+
+  // STEP 3 — read source files in parallel batches
+  pfill(40);plog('Reading source files in parallel…');pstatus('Loading source code…');
+  await raf();
+  await readSrcFiles(files);
+  pfill(75);plog(`Loaded ${S.srcContents.length} source files`);
+  await raf();
+
+  // STEP 4 — fast synchronous analysis (no more I/O)
+  pfill(82);plog('Discovering API endpoints…');pstatus('Analysing routes…');
+  await raf();
+  a.apis=discoverAPIs(files,S.srcContents,a.lang.primary);
+
+  pfill(88);plog('Mapping architecture layers…');
+  await raf();
+  a.layers=detectLayers(files,a.lang.primary);
+  a.deps=detectDeps(files,S.srcContents);
+
+  pfill(93);plog('Inferring project purpose…');
+  await raf();
+  a.purpose=inferPurpose(files,a);
+
+  pfill(97);plog('Generating README…');
+  await raf();
+  a.readme=buildReadme(a,S.name);
+
+  pfill(100);pstatus('Done!');plog(`✓ Ready — ${S.srcContents.length} files · ${a.apis.length} endpoints · ${a.packages.length} packages`,true);
+  await sleep(300);
+}
+
+// ═══ LANG DETECTION ═══
+function detectLang(files,byExt){
+  const scores={};
+  const extMap={js:'JavaScript',jsx:'JavaScript',mjs:'JavaScript',ts:'TypeScript',tsx:'TypeScript',
+    py:'Python',rb:'Ruby',go:'Go',rs:'Rust',java:'Java',cs:'C#',php:'PHP',kt:'Kotlin',
+    swift:'Swift',dart:'Dart',cpp:'C++',c:'C',h:'C/C++',ex:'Elixir',exs:'Elixir',
+    hs:'Haskell',lua:'Lua',r:'R',m:'Objective-C',scala:'Scala',clj:'Clojure',fs:'F#'};
+  files.forEach(f=>{
+    const e=f.name.split('.').pop().toLowerCase();
+    if(extMap[e]){scores[extMap[e]]=(scores[extMap[e]]||0)+1;}
+  });
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  return {
+    primary:sorted[0]?.[0]||'Unknown',
+    all:sorted.map(([l,c])=>({lang:l,count:c}))
+  };
+}
+
+// ═══ FRAMEWORK DETECTION ═══
+function detectFramework(files,byExt){
+  const paths=files.map(f=>f.path.toLowerCase());
+  const names=files.map(f=>f.name.toLowerCase());
+  const fw=[];
+  // JS/TS
+  if(byExt['jsx']||byExt['tsx']){if(paths.some(p=>p.includes('next')||names.includes('next.config.js')))fw.push('Next.js');else fw.push('React');}
+  if(names.includes('nuxt.config.js')||names.includes('nuxt.config.ts'))fw.push('Nuxt.js');
+  if(names.includes('vite.config.js')||names.includes('vite.config.ts'))fw.push('Vite');
+  if(byExt['vue'])fw.push('Vue.js');
+  if(byExt['svelte'])fw.push('Svelte');
+  if(paths.some(p=>p.includes('/routes/')&&byExt['js']))fw.push('Express.js');
+  if(names.includes('angular.json'))fw.push('Angular');
+  // Python
+  if(byExt['py']){
+    if(paths.some(p=>p.includes('django')||names.includes('manage.py')))fw.push('Django');
+    else if(paths.some(p=>p.includes('fastapi')||p.includes('uvicorn')))fw.push('FastAPI');
+    else if(paths.some(p=>p.includes('flask')))fw.push('Flask');
+  }
+  // .NET
+  if(byExt['cs']){if(files.some(f=>f.name.endsWith('.csproj')))fw.push('ASP.NET Core');}
+  // Java/Kotlin
+  if(byExt['java']||byExt['kt']){if(paths.some(p=>p.includes('springboot')||p.includes('spring')))fw.push('Spring Boot');}
+  // Go
+  if(byExt['go']){if(paths.some(p=>p.includes('gin')||p.includes('fiber')))fw.push('Go (Gin/Fiber)');else fw.push('Go');}
+  // Ruby
+  if(byExt['rb']){if(files.some(f=>f.name==='Gemfile'||f.name==='config.ru'))fw.push('Ruby on Rails');}
+  // PHP
+  if(byExt['php']){if(paths.some(p=>p.includes('laravel')))fw.push('Laravel');else fw.push('PHP');}
+  // Rust
+  if(byExt['rs']&&files.some(f=>f.name==='Cargo.toml'))fw.push('Rust');
+  // Mobile
+  if(byExt['dart'])fw.push('Flutter');
+  if(byExt['swift'])fw.push('Swift/iOS');
+  if(byExt['kt'])fw.push('Android/Kotlin');
+  return fw.length?fw:['Custom Project'];
+}
+
+// ═══ FILE TREE ═══
+function buildTree(files){
+  const root={name:S.name,children:{},files:[]};
+  files.forEach(f=>{
+    const parts=f.path.split('/').filter(Boolean);
+    let node=root;
+    for(let i=0;i<parts.length-1;i++){
+      const p=parts[i];
+      if(!node.children[p])node.children[p]={name:p,children:{},files:[]};
+      node=node.children[p];
+    }
+    node.files.push(f);
+  });
+  return root;
+}
+
+// ═══ READ SOURCE FILES — parallel batches + live progress ═══
+async function readSrcFiles(files){
+  S.srcContents=[];
+  const srcExts=new Set(['js','jsx','ts','tsx','mjs','cjs','py','rb','go','rs','java','cs','php','kt','swift','dart','cpp','c','h','ex','exs','hs','lua','r','scala','clj','fs','vue','svelte','elm','erl','ml']);
+  const srcFiles=files
+    .filter(f=>{const e=f.name.split('.').pop().toLowerCase();return srcExts.has(e)&&f.size<300000;})
+    .sort((a,b)=>a.size-b.size)  // smallest first = fastest visible progress
+    .slice(0,150);
+  const BATCH=24;
+  const total=srcFiles.length||1;
+  let done=0;
+  for(let i=0;i<srcFiles.length;i+=BATCH){
+    const batch=srcFiles.slice(i,i+BATCH);
+    const results=await Promise.all(batch.map(async f=>{
+      try{const t=await f.file.text();return{file:f.file,path:f.path,name:f.name,text:t,lang:getLang(f.name)};}
+      catch(e){return null;}
+    }));
+    results.filter(Boolean).forEach(r=>S.srcContents.push(r));
+    done+=batch.length;
+    pfill(40+Math.round((done/total)*33));
+    document.getElementById('src-count').textContent=S.srcContents.length;
+    document.querySelector('.prg-s').textContent=`Reading source… ${done}/${total}`;
+    await new Promise(r=>requestAnimationFrame(r));
+  }
+  document.getElementById('src-count').textContent=S.srcContents.length;
+}
+
+function getLang(name){
+  const e=name.split('.').pop().toLowerCase();
+  return ({js:'javascript',jsx:'jsx',ts:'typescript',tsx:'tsx',py:'python',rb:'ruby',
+    go:'go',rs:'rust',java:'java',cs:'csharp',php:'php',kt:'kotlin',swift:'swift',
+    dart:'dart',cpp:'cpp',c:'c',vue:'vue',svelte:'svelte',ex:'elixir'})[e]||'text';
+}
+
+// ═══ API DISCOVERY ═══
+function discoverAPIs(files,srcContents,lang){
+  const eps=[];
+  const patterns={
+    'JavaScript':[
+      {rx:/(?:app|router)\.(get|post|put|delete|patch)\s*\(\s*['"`]([^'"`]+)['"`]/gi,grp:[1,2]},
+      {rx:/(?:app|router)\.(get|post|put|delete|patch)\s*\(/gi,grp:[1]},
+    ],
+    'TypeScript':[
+      {rx:/(?:app|router)\.(get|post|put|delete|patch)\s*\(\s*['"`]([^'"`]+)['"`]/gi,grp:[1,2]},
+      {rx:/@(Get|Post|Put|Delete|Patch)\s*\(\s*['"`]?([^'"`\)]+)?['"`]?\s*\)/gi,grp:[1,2]},
+    ],
+    'Python':[
+      {rx:/@(?:app|router|bp)\.(get|post|put|delete|patch)\s*\(\s*['"`]([^'"`]+)['"`]/gi,grp:[1,2]},
+      {rx:/@(?:app|router)\.route\s*\(\s*['"`]([^'"`]+)['"`]/gi,grp:['GET',1]},
+    ],
+    'C#':[
+      {rx:/\[Http(Get|Post|Put|Delete|Patch)[^\]]*\][\s\S]{0,200}?(?:public|private)\s+[\w<>\[\], ]+\s+(\w+)\s*\(/gim,grp:[1,2]},
+    ],
+    'Java':[
+      {rx:/@(GetMapping|PostMapping|PutMapping|DeleteMapping|RequestMapping)\s*\(\s*(?:value\s*=\s*)?['"`]([^'"`]+)?['"`]/gi,grp:[1,2]},
+    ],
+    'Ruby':[
+      {rx:/(?:get|post|put|delete|patch)\s+['"`]([^'"`]+)['"`]/gi,grp:['GET',1]},
+    ],
+    'Go':[
+      {rx:/(?:r|mux|router)\.(GET|POST|PUT|DELETE|PATCH)\s*\(\s*['"`]([^'"`]+)['"`]/gi,grp:[1,2]},
+      {rx:/HandleFunc\s*\(\s*['"`]([^'"`]+)['"`]/gi,grp:['GET',1]},
+    ],
+    'PHP':[
+      {rx:/Route::(get|post|put|delete|patch)\s*\(\s*['"`]([^'"`]+)['"`]/gi,grp:[1,2]},
+    ],
+    'Kotlin':[
+      {rx:/@(GetMapping|PostMapping|PutMapping|DeleteMapping|RequestMapping)\s*\(\s*['"`]([^'"`]+)?['"`]/gi,grp:[1,2]},
+    ],
+    'Rust':[
+      {rx:/#\[(?:web::)?(get|post|put|delete|patch)\s*\(\s*['"`]([^'"`]+)['"`]/gi,grp:[1,2]},
+    ],
+  };
+  const verbNorm={getmapping:'GET',postmapping:'POST',putmapping:'PUT',deletemapping:'DELETE',requestmapping:'GET'};
+  for(const {path,text,lang:fl}of srcContents){
+    const pats=patterns[lang]||patterns['JavaScript']||[];
+    for(const {rx,grp}of pats){
+      let m;const r=new RegExp(rx.source,rx.flags);
+      while((m=r.exec(text))!==null){
+        const verb=typeof grp[0]==='string'?grp[0]:(m[grp[0]]||'GET');
+        const route=typeof grp[1]==='string'?grp[1]:(grp[1]?m[grp[1]]:'');
+        const normVerb=verbNorm[verb.toLowerCase()]||verb.toUpperCase();
+        if(normVerb&&!eps.some(e=>e.method===normVerb&&e.path===route))
+          eps.push({method:normVerb,path:route||'/',file:path.split('/').pop()});
+      }
+    }
+  }
+  document.getElementById('api-count').textContent=eps.length;
+  return eps.slice(0,60);
+}
+
+// ═══ ARCHITECTURE LAYERS ═══
+function detectLayers(files,primaryLang){
+  const p=files.map(f=>f.path.toLowerCase());
+  const layers=[];
+  const dirCheck=(dirs)=>dirs.some(d=>p.some(x=>x.includes('/'+d+'/')));
+  if(dirCheck(['controllers','routes','handlers','api','endpoints']))
+    layers.push({name:'API / Controller Layer',desc:'Handles HTTP routing, request validation, and response formatting',icon:'🌐'});
+  if(dirCheck(['services','usecases','business','application']))
+    layers.push({name:'Business / Service Layer',desc:'Core domain logic, orchestration, and use cases',icon:'⚙️'});
+  if(dirCheck(['repositories','repos','data','persistence','dal','dao']))
+    layers.push({name:'Data Access Layer',desc:'Database queries, ORM interactions, repository pattern',icon:'🗄️'});
+  if(dirCheck(['models','entities','domain','schema','types']))
+    layers.push({name:'Domain / Model Layer',desc:'Data shapes, entities, DTOs, type definitions',icon:'📦'});
+  if(dirCheck(['middleware','interceptors','guards','filters']))
+    layers.push({name:'Middleware Layer',desc:'Auth, logging, error handling, request pipeline',icon:'🔒'});
+  if(dirCheck(['infrastructure','config','utils','helpers','shared','common']))
+    layers.push({name:'Infrastructure / Shared',desc:'Configuration, utilities, cross-cutting concerns',icon:'🏗️'});
+  if(dirCheck(['components','pages','views','templates','screens']))
+    layers.push({name:'Presentation Layer',desc:'UI components, views, templates, pages',icon:'🎨'});
+  if(!layers.length)layers.push({name:'Project Structure',desc:'Standard project layout detected',icon:'📁'});
+  return layers;
+}
+
+// ═══ DEPENDENCY DETECTION ═══
+function detectDeps(files,srcContents){
+  const deps=new Set();
+  const pkgFile=files.find(f=>f.name==='package.json');
+  // pick from import statements
+  for(const {text}of srcContents.slice(0,30)){
+    const rx=/(?:import|require)\s*\(?['"`]([^'"`./][^'"`]*?)['"`]/g;let m;
+    while((m=rx.exec(text))!==null)deps.add(m[1].split('/')[0]);
+  }
+  return [...deps].filter(d=>!['fs','path','os','util','http','https','events','stream','crypto','child_process','url','assert','buffer','readline'].includes(d)).slice(0,30);
+}
+
+// ═══ PACKAGE EXTRACTION — parallel reads of manifest files ═══
+async function extractPackages(files){
+  const pkgs=[];
+  const manifests=files.filter(f=>['package.json','requirements.txt','Cargo.toml','Gemfile','go.mod','pyproject.toml'].includes(f.name)||f.name.endsWith('.csproj'));
+  const reads=await Promise.all(manifests.slice(0,8).map(async f=>{
+    try{return{name:f.name,text:await f.file.text()};}catch(e){return null;}
+  }));
+  for(const r of reads.filter(Boolean)){
+    const {name,text}=r;
+    if(name==='package.json'){
+      try{const o=JSON.parse(text);const deps={...o.dependencies,...o.devDependencies};Object.entries(deps).slice(0,30).forEach(([n,v])=>pkgs.push({name:n,version:v}));}catch(e){}
+    } else if(name==='requirements.txt'||name==='pyproject.toml'){
+      text.split('\n').filter(l=>l.trim()&&!l.startsWith('#')&&!l.startsWith('['))
+        .slice(0,25).forEach(l=>{const[n,...rest]=l.split(/[>=<!]/);if(n.trim())pkgs.push({name:n.trim(),version:rest.join('').trim()||'*'});});
+    } else if(name==='Cargo.toml'){
+      const rx=/(\w[\w-]+)\s*=\s*"([^"]+)"/g;let m;
+      while((m=rx.exec(text))!==null)pkgs.push({name:m[1],version:m[2]});
+    } else if(name==='Gemfile'){
+      const rx=/gem\s+['"]([^'"]+)['"]\s*(?:,\s*['"]([^'"]+)['"])?/g;let m;
+      while((m=rx.exec(text))!==null)pkgs.push({name:m[1],version:m[2]||'*'});
+    } else if(name==='go.mod'){
+      const rx=/require\s+([\w./\-]+)\s+v([\w.\-]+)/g;let m;
+      while((m=rx.exec(text))!==null)pkgs.push({name:m[1].split('/').pop(),version:m[2]});
+    } else if(name.endsWith('.csproj')){
+      const rx=/PackageReference\s+Include="([^"]+)"\s+Version="([^"]+)"/g;let m;
+      while((m=rx.exec(text))!==null)if(!pkgs.find(p=>p.name===m[1]))pkgs.push({name:m[1],version:m[2]});
+    }
+  }
+  return pkgs.slice(0,50);
+}
+
+// ═══ PURPOSE ═══
+function inferPurpose(files,a){
+  const p=files.map(f=>f.path.toLowerCase());
+  const fw=a.framework[0]||'';
+  if(fw.includes('Next'))return 'Full-Stack Next.js Web Application';
+  if(fw.includes('React'))return 'React Single-Page Application';
+  if(fw.includes('Vue'))return 'Vue.js Frontend Application';
+  if(fw.includes('Angular'))return 'Angular Enterprise Application';
+  if(fw.includes('Django'))return 'Django Full-Stack Web Application';
+  if(fw.includes('FastAPI'))return 'FastAPI RESTful Microservice';
+  if(fw.includes('Flask'))return 'Flask Web Application / API';
+  if(fw.includes('ASP.NET'))return 'ASP.NET Core Web Application';
+  if(fw.includes('Spring'))return 'Spring Boot Java Microservice';
+  if(fw.includes('Rails'))return 'Ruby on Rails Web Application';
+  if(fw.includes('Laravel'))return 'Laravel PHP Application';
+  if(fw.includes('Go'))return 'Go Backend Service / API';
+  if(fw.includes('Rust'))return 'Rust Systems / Web Service';
+  if(fw.includes('Flutter'))return 'Flutter Mobile Application';
+  if(p.some(x=>x.includes('cli')))return 'CLI Tool / Command-Line Application';
+  return `${a.lang.primary} Application`;
+}
+
+// ═══ README BUILDER ═══
+function buildReadme(a,name){
+  const fw=(a.framework||['Unknown']).join(', ');
+  const lang=(a.lang?.primary)||'Unknown';
+  const pkgList=(a.packages||[]).slice(0,8).map(p=>`- \`${p.name}\` ${p.version}`).join('\n');
+  const apiList=(a.apis||[]).slice(0,8).map(e=>`- \`${e.method}\` \`${e.path}\``).join('\n');
+  const layerList=(a.layers||[]).map(l=>`### ${l.icon} ${l.name}\n${l.desc}`).join('\n\n');
+  const src=S.files.length;const srcF=S.srcContents.length;
+return `# ${name}
+
+> ${a.purpose||'A modern software project'}
+
+[![Language](https://img.shields.io/badge/language-${encodeURIComponent(lang)}-blue)]()
+[![Framework](https://img.shields.io/badge/framework-${encodeURIComponent(fw.split(',')[0])}-green)]()
+[![Files](https://img.shields.io/badge/source%20files-${srcF}-lightgrey)]()
+
+## 📋 Overview
+
+${name} is a **${a.purpose||lang+' project'}** built with **${fw}**.
+
+| Metric | Value |
+|--------|-------|
+| Primary Language | ${lang} |
+| Framework(s) | ${fw} |
+| Total Files | ${src} |
+| Source Files | ${srcF} |
+| API Endpoints | ${(a.apis||[]).length} |
+| Dependencies | ${(a.packages||[]).length} |
+
+## 🏗️ Architecture
+
+${layerList}
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- ${lang} runtime / SDK installed
+- Package manager (npm / pip / cargo / etc.)
+- (Optional) Docker
+
+### Installation
+
+\`\`\`bash
+# Clone the repository
+git clone https://github.com/your-org/${name.toLowerCase().replace(/\s+/g,'-')}.git
+cd ${name}
+
+# Install dependencies
+# npm install  |  pip install -r requirements.txt  |  cargo build  |  etc.
+\`\`\`
+
+### Running Locally
+
+\`\`\`bash
+# Start development server
+# npm run dev  |  python main.py  |  go run .  |  cargo run
+\`\`\`
+
+## 🔌 API Endpoints
+
+${apiList||'_No endpoints auto-detected. Add route annotations to enable._'}
+
+## 📦 Dependencies
+
+${pkgList||'_See package manifest for full dependency list._'}
+
+## 📁 Project Structure
+
+\`\`\`
+${name}/
+${(a.layers||[]).map(l=>`├── ${l.name.split('/')[0].trim().toLowerCase().replace(/\s+/g,'-')}/    # ${l.desc}`).join('\n')}
+└── ...
+\`\`\`
+
+## ⚙️ Configuration
+
+Copy the example config and update with your values:
+
+\`\`\`bash
+cp .env.example .env
+\`\`\`
+
+## 🐳 Docker
+
+\`\`\`bash
+docker build -t ${name.toLowerCase()} .
+docker run -p 3000:3000 ${name.toLowerCase()}
+\`\`\`
+
+## 🧪 Tests
+
+\`\`\`bash
+# npm test  |  pytest  |  cargo test  |  go test ./...
+\`\`\`
+
+## 📄 License
+
+MIT © ${new Date().getFullYear()} — Generated by [Remedy.Dev](https://remedy.dev)
+`;
+}
+
+// ═══ RENDER ALL ═══
+function renderAll(){
+  try{
+    document.getElementById('main').dataset.view='docs';
+
+    // Render overview immediately (visible tab)
+    safeRender('pane-overview', renderOverview);
+    updateSidebar();
+    buildSearchIdx();
+    switchTab('overview');
+    document.getElementById('btn-exp').disabled=false;
+    toast('✓ '+S.files.length+' files · '+S.srcContents.length+' source · '+(S.a.apis||[]).length+' APIs');
+
+    // Defer remaining tabs
+    const deferred=[
+      ['pane-combined',renderCombined],
+      ['pane-arch',renderArch],
+      ['pane-api',renderAPI],
+      ['pane-stack',renderStack],
+      ['pane-setup',renderSetup],
+      ['pane-readme',renderReadme],
+      ['pane-improve',renderImprove],
+    ];
+    let i=0;
+    function renderNext(){
+      if(i>=deferred.length){initFT();bindAll();return;}
+      const [id,fn]=deferred[i++];
+      safeRender(id,fn);
+      setTimeout(renderNext,8);
+    }
+    setTimeout(renderNext,8);
+  }catch(err){
+    console.error('renderAll error:',err);
+    toast('⚠ Render error: '+err.message);
+  }
+}
+
+function safeRender(id,fn){
+  try{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.innerHTML=fn();
+  }catch(err){
+    console.error('Error rendering '+id+':',err);
+    document.getElementById(id).innerHTML='<div class="sec-wrap"><div class="call call-w"><strong>⚠ Render Error</strong>'+esc(err.message)+'</div></div>';
+  }
+}
+
+// ═══ OVERVIEW ═══
+function renderOverview(){
+  const a=S.a;const name=S.name;
+  const allLangs=(a.lang?.all||[]).slice(0,4).map(l=>`<span class="bdg bdg-g" style="font-size:10px">${esc(l.lang)} <span style="opacity:.6">${l.count}</span></span>`).join('');
+  const fwBadges=(a.framework||[]).map(f=>`<span class="bdg bdg-b" style="font-size:10px">${esc(f)}</span>`).join('');
+  return `<div class="sec-wrap">
+<div id="dbanner"><span class="tag">DIAGNOSED</span>Analyzed <strong>${S.files.length} files</strong> from <strong>${esc(name)}</strong> — ${S.srcContents.length} source files extracted.</div>
+<div class="ds fi">
+  <div class="sbadge">📋 Overview</div>
+  <h2 class="stitle">${esc(name)}</h2>
+  <p class="sdesc">${esc(a.purpose||'Software Project')}</p>
+  <div class="cg">
+    ${card('📄','Total Files',S.files.length,'in project')}
+    ${card('💻','Source Files',S.srcContents.length,'analyzed')}
+    ${card('🔌','API Endpoints',(a.apis||[]).length,'discovered')}
+    ${card('📦','Dependencies',(a.packages||[]).length,'packages')}
+    ${card('🏗️','Layers',(a.layers||[]).length,'detected')}
+    ${card('🌐','Frameworks',(a.framework||[]).length,'found')}
+  </div>
+  <div class="bdg-wrap">${allLangs}${fwBadges}</div>
+  <div class="call call-i"><strong>💡 Project Purpose</strong>${esc(a.purpose||'Auto-detected from your codebase')}</div>
+</div></div>`;
+}
+function card(ico,lbl,val,sub){return `<div class="card"><div class="ci">${ico}</div><div class="cl">${lbl}</div><div class="cv">${val}</div><div class="cs2">${sub}</div></div>`;}
+
+// ═══ COMBINED SOURCE ═══
+function renderCombined(){
+  const contents=S.srcContents;
+  if(!contents.length)return`<div style="padding:48px;text-align:center;color:var(--mist)">No source files found in this project.</div>`;
+  const totalLines=contents.reduce((s,f)=>s+f.text.split('\n').length,0);
+  let html=`
+<div class="stats-bar">
+  <div class="stat"><span class="stat-v">${contents.length}</span><span class="stat-l">Source Files</span></div>
+  <div class="stat"><span class="stat-v">${totalLines.toLocaleString()}</span><span class="stat-l">Lines</span></div>
+  <div class="stat"><span class="stat-v">${S.files.length}</span><span class="stat-l">Total Files</span></div>
+  <div class="stat"><span class="stat-v">${S.a.lang?.primary||'Mixed'}</span><span class="stat-l">Primary Lang</span></div>
+</div>
+<div class="comb-header">
+  <div><div class="comb-title">Combined Source Files</div><div class="comb-meta">${contents.length} files · ${totalLines.toLocaleString()} lines · annotated with role analysis</div></div>
+  <div style="display:flex;gap:8px">
+    <button class="ib" onclick="copyAllSrc()">📋 Copy All</button>
+  </div>
+</div>`;
+  for(const f of contents){
+    const role=analyzeRole(f.path,f.text,f.lang);
+    const tags=role.types.map(t=>`<span class="role-tag ${t.cls}">${t.label}</span>`).join('');
+    html+=`
+<div class="fs-sec">
+  <div class="fs-head" onclick="toggleFsSec(this)">
+    <span>${fileIcon(f.name)}</span>
+    <span style="font-family:var(--ff-mono);font-weight:600;font-size:12.5px;color:var(--violet)">${esc(f.name)}</span>
+    <span style="font-size:10.5px;color:var(--mist)">${esc(f.path.split('/').slice(0,-1).join(' / '))}</span>
+    <div class="fs-role-tags">${tags}</div>
+  </div>
+  <div class="fs-expl"><strong>📍 Role:</strong> ${role.explanation}${role.ns?`<br/><strong>Namespace/Package:</strong> <code style="font-size:10px">${esc(role.ns)}</code>`:''}</div>
+  <div class="fs-body">
+    <div class="cb" style="border-radius:0;border-left:none;border-right:none;margin:0">
+      <div class="cbh"><span class="cbl">${esc(f.lang)} — ${esc(f.name)}</span><button class="cpb">📋 Copy</button></div>
+      <pre>${addLn(hlSrc(f.text,f.lang))}</pre>
+    </div>
+  </div>
+</div>`;
+  }
+  return html;
+}
+
+function toggleFsSec(hd){
+  const siblings=[...hd.parentElement.children].slice(1);
+  siblings.forEach(s=>s.classList.toggle('cl'));
+}
+
+// ═══ ROLE ANALYSIS ═══
+function analyzeRole(path,text,lang){
+  const p=path.toLowerCase();const parts=p.split('/');
+  const result={types:[],explanation:'',ns:'',className:''};
+  // namespace
+  const nsm=text.match(/namespace\s+([\w.]+)/)||text.match(/package\s+([\w.]+)/);
+  result.ns=nsm?nsm[1]:'';
+  // classname
+  const cm=text.match(/(?:class|struct|interface)\s+(\w+)/);
+  result.className=cm?cm[1]:'';
+  // type detection
+  if(/\[apicontroller\]|@restcontroller|@controller|controllerbase/i.test(text)||parts.includes('controllers'))
+    result.types.push({label:'Controller',cls:'rt-ctrl'});
+  if(/\[apicontroller\]|@restcontroller|@router|router\.get|app\.get|@app\.(get|post)|express/i.test(text)||parts.includes('api'))
+    result.types.push({label:'API',cls:'rt-api'});
+  if(parts.includes('models')||parts.includes('entities')||parts.includes('schema')||parts.includes('types'))
+    result.types.push({label:'Model/Schema',cls:'rt-model'});
+  if(parts.includes('services')||parts.includes('usecases')||/class\s+\w+Service/i.test(text))
+    result.types.push({label:'Service',cls:'rt-svc'});
+  if(parts.includes('middleware')||/middleware|\.use\(|next\(\)/i.test(text))
+    result.types.push({label:'Middleware',cls:'rt-mw'});
+  if(parts.includes('config')||/appsettings|settings\.|config\./i.test(text)||['settings.py','config.js','config.ts'].includes(path.split('/').pop()))
+    result.types.push({label:'Config',cls:'rt-cfg'});
+  if(!result.types.length)result.types.push({label:'Source',cls:'rt-generic'});
+  // explanation
+  const t=result.types.map(t=>t.label).join(', ');
+  const location=parts.slice(0,-1).join(' › ')||S.name;
+  result.explanation=`${t} file in <strong>${esc(location)}</strong>${result.className?`. Class: <code style="font-size:10px">${esc(result.className)}</code>`:''}`;
+  return result;
+}
+
+// ═══ ARCHITECTURE ═══
+function renderArch(){
+  const layers=S.a.layers||[];
+  const diag=buildDiagram(layers);
+  return `<div class="ds fi" class="sec-wrap">
+  <div class="sbadge">🏗️ Architecture</div>
+  <h2 class="stitle">System Architecture</h2>
+  <p class="sdesc">Detected architectural layers and relationships in <strong>${esc(S.name)}</strong>.</p>
+  <div class="arch-box"><pre>${esc(diag)}</pre></div>
+  <div class="call call-i"><strong>🔍 Detected Pattern</strong>${layers.map(l=>l.icon+' '+l.name).join('  →  ')}</div>
+  ${layers.map(l=>`<div class="card" style="display:flex;gap:12px;align-items:flex-start;margin-bottom:8px"><span style="font-size:20px;flex-shrink:0">${l.icon}</span><div><div class="cv">${esc(l.name)}</div><div class="cs2">${esc(l.desc)}</div></div></div>`).join('')}
+</div>`;
+}
+
+function buildDiagram(layers){
+  if(!layers.length)return'No architecture detected.';
+  const lines=['Request / Client'];
+  layers.forEach((l,i)=>{
+    lines.push('    │');
+    lines.push('    ▼');
+    lines.push(`┌─────────────────────────────────┐`);
+    lines.push(`│  ${l.icon} ${l.name.padEnd(29)}│`);
+    lines.push(`│  ${l.desc.slice(0,31).padEnd(31)}│`);
+    lines.push(`└─────────────────────────────────┘`);
+  });
+  lines.push('    │');lines.push('    ▼');lines.push('Response / Data Store');
+  return lines.join('\n');
+}
+
+// ═══ API ═══
+function renderAPI(){
+  const eps=S.a.apis||[];
+  if(!eps.length)return`<div class="sec-wrap"><div class="sbadge">🔌 API</div><h2 class="stitle">API Endpoints</h2><div class="call call-w"><strong>⚠ No endpoints found</strong>Add HTTP route annotations or decorators to auto-detect them here.</div></div>`;
+  const byFile={};
+  eps.forEach(e=>{(byFile[e.file]=byFile[e.file]||[]).push(e);});
+  let html=`<div class="sec-wrap">
+  <div class="sbadge">🔌 API</div>
+  <h2 class="stitle">Discovered Endpoints</h2>
+  <p class="sdesc">${eps.length} endpoint${eps.length!==1?'s':''} across ${Object.keys(byFile).length} file${Object.keys(byFile).length!==1?'s':''}.</p>
+  <div class="call call-i"><strong>ℹ Base URL</strong>Paths are relative to your server root. Adjust prefix based on your router configuration.</div>`;
+  Object.entries(byFile).forEach(([file,list])=>{
+    html+=`<h3 style="font-family:var(--ff-body);font-weight:600;font-size:14px;margin:18px 0 8px;color:var(--violet)">${esc(file)}</h3>`;
+    list.forEach(e=>{
+      html+=`<div class="ep">
+        <div class="eph">
+          <span class="mth ${e.method}">${e.method}</span>
+          <span class="eppath">${esc(e.path)}</span>
+        </div>
+        <div class="epb">
+          <table class="dt" style="margin:0"><tbody>
+            <tr><td><strong>File</strong></td><td><code>${esc(e.file)}</code></td></tr>
+            <tr><td><strong>Method</strong></td><td><code>${e.method}</code></td></tr>
+            <tr><td><strong>Route</strong></td><td><code>${esc(e.path)}</code></td></tr>
+          </tbody></table>
+        </div>
+      </div>`;
+    });
+  });
+  html+=`</div>`;return html;
+}
+
+// ═══ STACK ═══
+function renderStack(){
+  const a=S.a;
+  const pkgs=a.packages||[];
+  return `<div class="sec-wrap">
+  <div class="sbadge">⚙️ Tech Stack</div>
+  <h2 class="stitle">Technology Stack</h2>
+  <p class="sdesc">All languages, frameworks and packages detected in <strong>${esc(S.name)}</strong>.</p>
+  <div class="cg">
+    <div class="card"><div class="ci">💻</div><div class="cl">Primary Language</div><div class="cv">${esc(a.lang?.primary||'Unknown')}</div></div>
+    <div class="card"><div class="ci">🌐</div><div class="cl">Frameworks</div>${(a.framework||[]).map(f=>`<div class="cv" style="font-size:13px;margin-top:3px">${esc(f)}</div>`).join('')}</div>
+    <div class="card"><div class="ci">📦</div><div class="cl">Packages</div><div class="cv">${pkgs.length}</div><div class="cs2">dependencies</div></div>
+    <div class="card"><div class="ci">🌍</div><div class="cl">Languages</div>${(a.lang?.all||[]).slice(0,3).map(l=>`<div class="cv" style="font-size:13px;margin-top:3px">${esc(l.lang)}</div>`).join('')}</div>
+  </div>
+  ${pkgs.length?`
+  <h3 style="font-family:var(--ff-body);font-weight:700;font-size:15px;margin:24px 0 12px">All Packages</h3>
+  <table class="dt"><thead><tr><th>Package</th><th>Version</th><th>Category</th></tr></thead><tbody>
+  ${pkgs.map(p=>`<tr><td><code>${esc(p.name)}</code></td><td>${esc(p.version)}</td><td>${catPkg(p.name)}</td></tr>`).join('')}
+  </tbody></table>`:''}</div>`;
+}
+
+function catPkg(n){
+  if(/react|vue|angular|svelte|solid|preact/i.test(n))return`<span class="bdg bdg-b" style="font-size:10px">UI</span>`;
+  if(/express|fastapi|django|flask|rails|gin|fiber|nest/i.test(n))return`<span class="bdg bdg-g" style="font-size:10px">Framework</span>`;
+  if(/jest|pytest|mocha|vitest|testing|spec|rspec/i.test(n))return`<span class="bdg bdg-e" style="font-size:10px">Testing</span>`;
+  if(/prisma|sequelize|mongoose|typeorm|sqlalchemy|knex|drizzle/i.test(n))return`<span class="bdg bdg-v" style="font-size:10px">ORM/DB</span>`;
+  if(/auth|jwt|passport|bcrypt|oauth|identity/i.test(n))return`<span class="bdg bdg-a" style="font-size:10px">Auth</span>`;
+  if(/winston|pino|serilog|log4|morgan/i.test(n))return`<span class="bdg bdg-b" style="font-size:10px">Logging</span>`;
+  if(/webpack|vite|parcel|rollup|esbuild|babel|tsc/i.test(n))return`<span class="bdg bdg-a" style="font-size:10px">Build</span>`;
+  if(/tailwind|sass|styled|emotion|css/i.test(n))return`<span class="bdg bdg-r" style="font-size:10px">Styling</span>`;
+  if(/axios|fetch|got|ky|superagent|httpx/i.test(n))return`<span class="bdg bdg-b" style="font-size:10px">HTTP</span>`;
+  return`<span class="bdg" style="font-size:10px;border-color:var(--wire);color:var(--mist)">Library</span>`;
+}
+
+// ═══ SETUP ═══
+function renderSetup(){
+  const a=S.a;const fw=a.framework?.[0]||'';const lang=a.lang?.primary||'';
+  const hasMig=S.files.some(f=>/migration/i.test(f.path));
+  const hasDock=S.files.some(f=>/^dockerfile$/i.test(f.name));
+  const installCmd=getInstallCmd(lang,fw);const runCmd=getRunCmd(lang,fw);
+  return `<div class="sec-wrap">
+  <div class="sbadge">🚀 Setup</div>
+  <h2 class="stitle">Local Development Setup</h2>
+  <p class="sdesc">Get <strong>${esc(S.name)}</strong> running on your machine.</p>
+  <div class="call call-s"><strong>✅ Detected Runtime</strong>${esc(lang)} · ${esc(fw)} — commands auto-generated below</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sc"><div class="st">Clone Repository</div>
+      <div class="cb" style="margin-top:8px"><div class="cbh"><span class="cbl">bash</span><button class="cpb">📋 Copy</button></div>
+      <pre>git clone https://github.com/your-org/${S.name.toLowerCase().replace(/\s+/g,'-')}.git\ncd ${S.name}</pre></div></div></div>
+    <div class="step"><div class="sn">2</div><div class="sc"><div class="st">Install Dependencies</div>
+      <div class="cb" style="margin-top:8px"><div class="cbh"><span class="cbl">bash</span><button class="cpb">📋 Copy</button></div>
+      <pre>${esc(installCmd)}</pre></div></div></div>
+    ${hasMig?`<div class="step"><div class="sn">3</div><div class="sc"><div class="st">Run Migrations</div>
+      <div class="cb" style="margin-top:8px"><div class="cbh"><span class="cbl">bash</span><button class="cpb">📋 Copy</button></div>
+      <pre>${esc(getMigCmd(lang,fw))}</pre></div></div></div>`:''}
+    <div class="step"><div class="sn">${hasMig?4:3}</div><div class="sc"><div class="st">Start Development Server</div>
+      <div class="cb" style="margin-top:8px"><div class="cbh"><span class="cbl">bash</span><button class="cpb">📋 Copy</button></div>
+      <pre>${esc(runCmd)}</pre></div></div></div>
+    ${hasDock?`<div class="step"><div class="sn">${hasMig?5:4}</div><div class="sc"><div class="st">Or Run with Docker</div>
+      <div class="cb" style="margin-top:8px"><div class="cbh"><span class="cbl">bash</span><button class="cpb">📋 Copy</button></div>
+      <pre>docker build -t ${S.name.toLowerCase()} .\ndocker run -p 3000:3000 ${S.name.toLowerCase()}</pre></div></div></div>`:''}
+  </div></div>`;
+}
+
+function getInstallCmd(lang,fw){
+  if(lang==='JavaScript'||lang==='TypeScript')return'npm install';
+  if(lang==='Python')return'pip install -r requirements.txt\n# or: pip install -e .';
+  if(lang==='Ruby')return'bundle install';
+  if(lang==='Go')return'go mod download';
+  if(lang==='Rust')return'cargo build';
+  if(lang==='Java')return'mvn install\n# or: ./gradlew build';
+  if(lang==='C#')return'dotnet restore';
+  if(lang==='PHP')return'composer install';
+  if(lang==='Dart')return'flutter pub get';
+  return'# Install dependencies based on your package manager';
+}
+function getRunCmd(lang,fw){
+  if(fw.includes('Next'))return'npm run dev    # http://localhost:3000';
+  if(fw.includes('React')||fw.includes('Vite'))return'npm run dev';
+  if(fw.includes('Angular'))return'ng serve';
+  if(fw.includes('Django'))return'python manage.py runserver';
+  if(fw.includes('FastAPI'))return'uvicorn main:app --reload';
+  if(fw.includes('Flask'))return'flask run --debug';
+  if(fw.includes('ASP.NET'))return'dotnet run';
+  if(fw.includes('Rails'))return'rails server';
+  if(fw.includes('Go'))return'go run .';
+  if(fw.includes('Rust'))return'cargo run';
+  if(lang==='JavaScript'||lang==='TypeScript')return'npm run dev\n# or: node index.js';
+  if(lang==='Python')return'python main.py';
+  if(fw.includes('Flutter'))return'flutter run';
+  return'# Run your project based on your framework';
+}
+function getMigCmd(lang,fw){
+  if(lang==='C#')return'dotnet ef database update';
+  if(lang==='Python')return'python manage.py migrate';
+  if(lang==='Ruby')return'rails db:migrate';
+  if(lang==='JavaScript')return'npx prisma migrate dev\n# or: npm run migrate';
+  return'# Run your migration command';
+}
+
+// ═══ README ═══
+function renderReadme(){
+  const md=S.a.readme||'';
+  return `<div class="sec-wrap">
+  <div class="sbadge">📝 README</div>
+  <h2 class="stitle">Generated GitHub README</h2>
+  <p class="sdesc">Production-ready README built from your actual codebase. Edit and copy below.</p>
+  <div style="display:flex;gap:8px;margin-bottom:16px">
+    <button class="ib prime" onclick="copyReadme()">📋 Copy README.md</button>
+    <button class="ib" onclick="downloadReadme()">⬇ Download .md</button>
+  </div>
+  <textarea class="readme-editor" id="readme-ta" spellcheck="false">${esc(md)}</textarea>
+  <div class="call call-s" style="margin-top:12px"><strong>💡 Tip</strong>Edit the README above, then copy or download. Update badge URLs, screenshots, and contribution guidelines.</div>
+</div>`;
+}
+
+function copyReadme(){const ta=document.getElementById('readme-ta');navigator.clipboard?.writeText(ta.value).then(()=>toast('✓ README copied to clipboard'));}
+function downloadReadme(){
+  const ta=document.getElementById('readme-ta');
+  const blob=new Blob([ta.value],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='README.md';
+  document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);document.body.removeChild(a);},2000);
+  toast('✓ README.md downloaded');
+}
+
+// ═══ IMPROVE ═══
+function renderImprove(){
+  const a=S.a;const files=S.files;
+  const hasTests=files.some(f=>/test|spec/i.test(f.path)&&!skip(f.path));
+  const hasDock=files.some(f=>/^dockerfile$/i.test(f.name));
+  const hasCI=files.some(f=>/\.github|\.gitlab-ci|pipeline|jenkins/i.test(f.path));
+  const hasEnvEx=files.some(f=>f.name==='.env.example'||f.name==='.env.sample');
+  const hasLint=files.some(f=>f.name==='.eslintrc.js'||f.name==='.eslintrc.json'||f.name==='pyproject.toml'||f.name==='.rubocop.yml');
+  const hasReadme=files.some(f=>/readme/i.test(f.name));
+  const imps=[
+    !hasTests&&{p:'lv-h',l:'HIGH',t:'Add Tests',d:'No test files detected. Add unit & integration tests (Jest, pytest, JUnit, etc.) to catch regressions and document behavior.'},
+    !hasDock&&{p:'lv-m',l:'MED',t:'Add Dockerfile',d:'Containerize for reproducible dev, staging, and production environments. Add docker-compose.yml for local dependencies.'},
+    !hasCI&&{p:'lv-m',l:'MED',t:'CI/CD Pipeline',d:'Add GitHub Actions or GitLab CI — automate tests, lint, and deployments on every push.'},
+    !hasEnvEx&&{p:'lv-m',l:'MED',t:'Add .env.example',d:'Document required environment variables so contributors know what to configure. Never commit real secrets.'},
+    !hasLint&&{p:'lv-l',l:'LOW',t:'Add Linting Config',d:'Enforce code style with ESLint, Prettier, Pylint, Black, RuboCop, etc. Prevents style drift.'},
+    !hasReadme&&{p:'lv-l',l:'LOW',t:'Add README',d:'No README found. Use the README tab to generate one from your codebase.'},
+    {p:'lv-m',l:'MED',t:'Error Handling',d:'Add centralized error handling middleware to return consistent error shapes to clients.'},
+    {p:'lv-l',l:'LOW',t:'Structured Logging',d:'Replace console.log with a structured logger (Pino, Winston, structlog) for queryable production logs.'},
+    {p:'lv-l',l:'LOW',t:'Health Check Endpoint',d:'Add /health and /ready endpoints for load balancers, Kubernetes probes, and uptime monitors.'},
+    {p:'lv-m',l:'MED',t:'Security Headers',d:'Add HTTP security headers (Helmet.js, CORS config, CSP) to protect against common web attacks.'},
+  ].filter(Boolean);
+  return `<div class="sec-wrap">
+  <div class="sbadge">💡 Improvements</div>
+  <h2 class="stitle">Improvement Suggestions</h2>
+  <p class="sdesc">Prioritized recommendations based on analysis of <strong>${esc(S.name)}</strong>.</p>
+  ${imps.map(i=>`<div class="imp"><span class="imp-lv ${i.p}">${i.l}</span><div class="it"><div class="it-t">${i.t}</div><div class="it-d">${i.d}</div></div></div>`).join('')}
+  <div class="call call-s" style="margin-top:20px"><strong>🏆 What's Working</strong>Files scanned: ${S.files.length} · Source files: ${S.srcContents.length} · Endpoints: ${(a.apis||[]).length} · Packages: ${(a.packages||[]).length} · Layers: ${(a.layers||[]).length}</div>
+</div>`;
+}
+
+// ═══ SYNTAX HIGHLIGHT ═══
+function hlSrc(code,lang){
+  let t=esc(code);
+  const kws={
+    javascript:/\b(const|let|var|function|class|extends|return|if|else|for|while|async|await|import|export|from|default|new|this|typeof|instanceof|try|catch|throw|null|undefined|true|false|=>|void)\b/g,
+    typescript:/\b(const|let|var|function|class|extends|return|if|else|for|while|async|await|import|export|from|default|new|this|typeof|instanceof|try|catch|throw|null|undefined|true|false|interface|type|enum|readonly|public|private|protected|implements)\b/g,
+    python:/\b(def|class|return|if|elif|else|for|while|import|from|as|with|try|except|finally|raise|yield|lambda|pass|break|continue|not|and|or|in|is|None|True|False|self|async|await)\b/g,
+    csharp:/\b(public|private|protected|internal|static|async|await|return|class|interface|namespace|using|void|string|int|bool|object|var|new|this|base|override|virtual|abstract|sealed|readonly|const|partial|null|true|false)\b/g,
+    go:/\b(func|package|import|var|const|type|struct|interface|if|else|for|range|return|go|chan|select|case|default|defer|break|continue|nil|true|false|error)\b/g,
+    rust:/\b(fn|let|mut|struct|enum|impl|trait|use|mod|pub|crate|super|self|return|if|else|loop|while|for|match|async|await|move|ref|type|where|const|static)\b/g,
+    java:/\b(public|private|protected|static|void|class|interface|extends|implements|return|if|else|for|while|new|this|super|import|package|try|catch|throw|final|abstract|null|true|false)\b/g,
+    ruby:/\b(def|class|module|end|if|elsif|else|unless|case|when|while|until|for|do|return|yield|require|include|extend|attr|nil|true|false|self|super|begin|rescue|raise)\b/g,
+    php:/\b(function|class|public|private|protected|return|if|else|for|while|foreach|new|echo|use|namespace|static|abstract|interface|extends|implements|null|true|false|$this)\b/g,
+  };
+  const rx=kws[lang]||kws.javascript;
+  t=t.replace(rx,'<span class="kw">$1</span>');
+  // strings
+  t=t.replace(/(&quot;[^&]*?&quot;|'[^']*?'|`[^`]*?`)/g,'<span class="str">$1</span>');
+  // comments
+  t=t.replace(/(\/\/[^\n]*|#[^\n]*|\/\*[\s\S]*?\*\/)/g,'<span class="cm">$1</span>');
+  // decorators/attributes
+  t=t.replace(/(@\w+|#\[\w+\]|\[[\w,\s]+\])/g,'<span class="at">$1</span>');
+  return t;
+}
+
+function addLn(html){
+  const lines=html.split('\n');
+  return lines.map((l,i)=>`<span class="ln">${i+1}</span>${l}`).join('\n');
+}
+
+// ═══ FILE TREE ═══
+function initFT(){
+  const wrap=document.getElementById('ft-root');
+  if(wrap&&S.tree)wrap.innerHTML='';
+  if(wrap&&S.tree)wrap.appendChild(renderFTNode(S.tree,true));
+}
+
+function renderFTNode(node,isRoot){
+  const wrap=document.createElement('div');
+  const kids=Object.values(node.children);
+  const hasKids=kids.length>0||node.files.length>0;
+  if(!isRoot){
+    const nd=document.createElement('div');nd.className='ft-item';
+    nd.innerHTML=`<span class="ft-tog op">▶</span><span style="color:var(--amber);margin-right:4px">📁</span><span class="ft-name dir">${esc(node.name)}/</span>`;
+    wrap.appendChild(nd);
+    if(hasKids){
+      const ch=document.createElement('div');ch.className='ft-ch';
+      kids.forEach(k=>ch.appendChild(renderFTNode(k,false)));
+      node.files.forEach(f=>{
+        const ext=f.name.split('.').pop().toLowerCase();
+        const fd=document.createElement('div');fd.className='ft-item';
+        fd.setAttribute('data-path',f.path);
+        const extColors={cs:'var(--clr-cs)',js:'var(--clr-js)',ts:'var(--clr-ts)',py:'var(--clr-py)',go:'var(--clr-go)',rs:'var(--clr-rs)',java:'var(--clr-java)',php:'var(--clr-php)',rb:'var(--clr-rb)',kt:'var(--clr-kt)',swift:'var(--clr-swift)',dart:'var(--clr-dart)',cpp:'var(--clr-cpp)'};
+        const c=extColors[ext]||'var(--fog)';
+        fd.innerHTML=`<span class="ft-tog" style="opacity:0">▶</span><span style="margin-right:4px">${fileIcon(f.name)}</span><span class="ft-name" style="color:${c}">${esc(f.name)}</span>`;
+        fd.addEventListener('click',e=>{
+          e.stopPropagation();
+          document.querySelectorAll('.ft-item.on').forEach(el=>el.classList.remove('on'));
+          fd.classList.add('on');
+          // Find in combined
+          switchTab('combined');
+          setTimeout(()=>{
+            const secs=document.querySelectorAll('.fs-head');
+            for(const sec of secs){const nm=sec.querySelector('[style*="violet"]');if(nm&&nm.textContent.trim()===f.name){sec.scrollIntoView({behavior:'smooth',block:'start'});break;}}
+          },100);
+        });
+        ch.appendChild(fd);
+      });
+      wrap.appendChild(ch);
+      nd.addEventListener('click',e=>{
+        e.stopPropagation();
+        ch.classList.toggle('cl');
+        nd.querySelector('.ft-tog').classList.toggle('op');
+      });
+    }
+  } else {
+    const ch=document.createElement('div');ch.className='ft-ch';
+    kids.forEach(k=>ch.appendChild(renderFTNode(k,false)));
+    node.files.forEach(f=>{
+      const ext=f.name.split('.').pop().toLowerCase();
+      const fd=document.createElement('div');fd.className='ft-item';
+      fd.innerHTML=`<span class="ft-tog" style="opacity:0">▶</span><span style="margin-right:4px">${fileIcon(f.name)}</span><span class="ft-name">${esc(f.name)}</span>`;
+      ch.appendChild(fd);
+    });
+    wrap.appendChild(ch);
+  }
+  return wrap;
+}
+
+function fileIcon(name){
+  const e=name.split('.').pop().toLowerCase();
+  return({cs:'🔷',js:'💛',jsx:'⚛️',ts:'💙',tsx:'⚛️',py:'🐍',rb:'💎',go:'🐹',rs:'🦀',java:'☕',php:'🐘',kt:'🎯',swift:'🍎',dart:'🎯',vue:'💚',svelte:'🧡',html:'🌐',css:'🎨',scss:'🎨',json:'📋',xml:'📄',yml:'⚙️',yaml:'⚙️',md:'📝',dockerfile:'🐳',sln:'🏢',csproj:'⚙️',sql:'🗄️',sh:'🔧',env:'🔑',lock:'🔒',txt:'📄'})[e]||'📄';
+}
+
+// ═══ SIDEBAR UPDATE ═══
+function updateSidebar(){
+  const stats=`
+<div class="sb-stats">
+  <div class="ssc"><span class="ssc-v">${S.files.length}</span><span class="ssc-l">Files</span></div>
+  <div class="ssc"><span class="ssc-v">${S.srcContents.length}</span><span class="ssc-l">Source</span></div>
+  <div class="ssc"><span class="ssc-v">${(S.a.apis||[]).length}</span><span class="ssc-l">APIs</span></div>
+  <div class="ssc"><span class="ssc-v">${S.a.lang?.primary?.slice(0,4)||'?'}</span><span class="ssc-l">Lang</span></div>
+</div>`;
+  const navLinks=[
+    ['📋','Overview','overview'],['🔗','Source Files','combined'],
+    ['🏗️','Architecture','arch'],['🔌','API Docs','api'],
+    ['⚙️','Tech Stack','stack'],['🚀','Setup Guide','setup'],
+    ['📝','README','readme'],['💡','Improve','improve'],
+  ];
+  document.getElementById('sb-inner').innerHTML=`
+<div class="sb-section">
+  <div class="sb-label">Project: ${esc(S.name)}</div>
+  <div class="sb-link" onclick="triggerImport()"><span class="si">📂</span>Import New</div>
+</div>
+<div class="sb-sep"></div>
+${stats}
+<div class="sb-sep"></div>
+<div class="sb-section">
+  <div class="sb-label">Sections</div>
+  ${navLinks.map(([i,l,t])=>`<div class="sb-link" id="sbl-${t}" onclick="switchTab('${t}')"><span class="si">${i}</span>${l}</div>`).join('')}
+</div>
+<div class="sb-sep"></div>
+<div class="sb-section">
+  <div class="sb-label">File Tree</div>
+  <div id="ft-root" style="padding-bottom:40px"></div>
+</div>`;
+}
+
+// ═══ TAB SWITCH ═══
+function switchTab(name){
+  S.activeTab=name;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  const tb=document.getElementById('tb-'+name);if(tb)tb.classList.add('on');
+  const pn=document.getElementById('pane-'+name);
+  if(pn){
+    pn.classList.add('on');
+    // If tab not yet rendered, show placeholder
+    if(!pn.innerHTML.trim()){
+      pn.innerHTML='<div style="padding:48px;text-align:center;color:var(--mist);font-family:var(--ff-mono);font-size:13px"><div style="font-size:32px;margin-bottom:12px">⏳</div>Rendering…</div>';
+    }
+  }
+  document.querySelectorAll('.sb-link[id]').forEach(b=>b.classList.remove('on'));
+  const sbl=document.getElementById('sbl-'+name);if(sbl)sbl.classList.add('on');
+  if(document.getElementById('sb').classList.contains('on'))toggleSb();
+}
+
+// ═══ BIND EVENTS ═══
+function bindAll(){
+  // endpoint toggles
+  document.querySelectorAll('.eph').forEach(h=>{h.addEventListener('click',()=>h.nextElementSibling.classList.toggle('on'));});
+  // copy buttons
+  document.querySelectorAll('.cpb').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const pre=b.closest('.cb').querySelector('pre');
+      navigator.clipboard?.writeText(pre.textContent).then(()=>{b.textContent='✓';setTimeout(()=>{b.innerHTML='📋 Copy';},1400);});
+    });
+  });
+}
+
+// ═══ COPY ALL ═══
+function copyAllSrc(){
+  const out=S.srcContents.map(f=>{
+    const r=analyzeRole(f.path,f.text,f.lang);
+    return`// ${'─'.repeat(70)}\n// File : ${f.path}\n// Role : ${r.types.map(t=>t.label).join(', ')}\n// ${'─'.repeat(70)}\n\n${f.text.trimEnd()}\n\n\n`;
+  }).join('');
+  navigator.clipboard?.writeText(out).then(()=>toast('✓ All source copied to clipboard'));
+}
+
+// ═══ EXPORT ═══
+function exportCombined(){
+  if(!S.srcContents.length){toast('⚠ No source files loaded');return;}
+  const out=S.srcContents.map(f=>{
+    const r=analyzeRole(f.path,f.text,f.lang);
+    return`// ${'═'.repeat(72)}\n// FILE : ${f.path}\n// ROLE : ${r.types.map(t=>t.label).join(', ')}\n// LANG : ${f.lang}\n${r.ns?`// NS   : ${r.ns}\n`:''}\n${f.text.trimEnd()}\n\n\n`;
+  }).join('');
+  const header=`// Remedy.Dev — Combined Source Export\n// Project : ${S.name}\n// Lang    : ${S.a.lang?.primary||'Mixed'}\n// Files   : ${S.srcContents.length}\n// Date    : ${new Date().toISOString()}\n// ${'═'.repeat(72)}\n\n\n`;
+  const blob=new Blob([header+out],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`${S.name.toLowerCase().replace(/\s+/g,'_')}_combined.txt`;
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);document.body.removeChild(a);},2000);
+  toast(`✓ Exported ${S.srcContents.length} files`);
+}
+
+// ═══ RESET ═══
+function resetLanding(){
+  document.getElementById('main').dataset.view='land';
+  S.files=[];S.srcContents=[];S.a={};S.name='';
+  document.getElementById('btn-exp').disabled=true;
+  document.getElementById('sb-inner').innerHTML=`
+<div class="sb-section">
+  <div class="sb-label">Getting Started</div>
+  <div class="sb-link on" onclick="resetLanding()"><span class="si">🏠</span>Home</div>
+  <div class="sb-link" onclick="triggerImport()"><span class="si">📂</span>Import Project</div>
+</div>
+<div class="sb-sep"></div>
+<div class="sb-section">
+  <div class="sb-label">Supported</div>
+  <div class="sb-drop" id="sb-dz" onclick="triggerImport()" ondragover="sbDzOv(event)" ondragleave="sbDzLv()" ondrop="sbDzDrop(event)">
+    <span class="sd-ico">📦</span>
+    <div class="sd-t">Drop Folder Here</div>
+    <div class="sd-s">Any language ·<br/><b>JS, TS, Python, C#, Go,<br/>Rust, Java, PHP, Ruby…</b></div>
+  </div>
+</div>`;
+}
+
+// ═══ SEARCH ═══
+let sidx=[];
+function buildSearchIdx(){
+  sidx=[
+    {s:'Overview',t:'summary stats purpose project total files',id:'overview'},
+    {s:'Source Files',t:'code source combined annotated copy export',id:'combined'},
+    {s:'Architecture',t:'layers diagram pattern structure design',id:'arch'},
+    {s:'API Docs',t:'endpoints routes http get post put delete',id:'api'},
+    {s:'Tech Stack',t:'packages dependencies framework library nuget npm pip',id:'stack'},
+    {s:'Setup Guide',t:'install run local development docker migrate',id:'setup'},
+    {s:'README',t:'readme github markdown documentation',id:'readme'},
+    {s:'Improvements',t:'suggestions improvements best practices testing ci docker',id:'improve'},
+  ];
+}
+const siEl=document.getElementById('si'),srEl=document.getElementById('sr');
+siEl.addEventListener('input',e=>{
+  const q=e.target.value.trim().toLowerCase();
+  if(!q||!sidx.length){srEl.classList.remove('on');return;}
+  const hits=sidx.filter(i=>i.t.includes(q)||i.s.toLowerCase().includes(q));
+  if(!hits.length){srEl.classList.remove('on');return;}
+  srEl.innerHTML=hits.map(h=>`<div class="sri" onclick="switchTab('${h.id}');srEl.classList.remove('on');siEl.value=''"><span class="sri-tag">${h.s}</span>${h.t.split(' ').slice(0,4).join(', ')}</div>`).join('');
+  srEl.classList.add('on');
+});
+document.addEventListener('click',e=>{if(!e.target.closest('#sw'))srEl.classList.remove('on');});
+
+// ═══ TOAST ═══
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),3000);
+}
+
+// ═══ UTILS ═══
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+</script>
+</body>
+</html>
