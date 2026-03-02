@@ -539,9 +539,6 @@ input[type="file"]{display:none}
     <input type="text" id="si" placeholder="Search docs…" autocomplete="off"/>
     <div id="sr"></div>
   </div>
-  <div id="sw">
-      <div class="logo-text">By<em> Anshad.Dev</em></div>
-  </div>
   <div class="hdr-right">
     <button class="ib prime" id="btn-exp" disabled onclick="exportCombined()">⬇ Export .txt</button>
     <button class="ib" onclick="toggleTheme()"><span id="thI">☀️</span></button>
@@ -632,13 +629,14 @@ input[type="file"]{display:none}
   <div id="docs-wrap">
     <div class="tabs-row">
       <div class="tab-btn on" id="tb-overview" onclick="switchTab('overview')">📋 Overview</div>
-      <div class="tab-btn" id="tb-combined" onclick="switchTab('combined')">🔗 Source Files <span class="tab-count" id="src-count">0</span></div>
+      <div class="tab-btn" id="tb-combined" onclick="switchTab('combined')">🔗 All Files <span class="tab-count" id="src-count">0</span></div>
       <div class="tab-btn" id="tb-arch" onclick="switchTab('arch')">🏗️ Architecture</div>
       <div class="tab-btn" id="tb-api" onclick="switchTab('api')">🔌 APIs <span class="tab-count" id="api-count">0</span></div>
       <div class="tab-btn" id="tb-stack" onclick="switchTab('stack')">⚙️ Stack</div>
       <div class="tab-btn" id="tb-setup" onclick="switchTab('setup')">🚀 Setup</div>
       <div class="tab-btn" id="tb-readme" onclick="switchTab('readme')">📝 README</div>
       <div class="tab-btn" id="tb-improve" onclick="switchTab('improve')">💡 Improve</div>
+      <div class="tab-btn" id="tb-configs" onclick="switchTab('configs')">⚙️ Config Files <span class="tab-count" id="cfg-count">0</span></div>
     </div>
     <div id="docs">
       <div id="pane-overview" class="pane on"></div>
@@ -649,6 +647,7 @@ input[type="file"]{display:none}
       <div id="pane-setup" class="pane"></div>
       <div id="pane-readme" class="pane"></div>
       <div id="pane-improve" class="pane"></div>
+      <div id="pane-configs" class="pane"></div>
     </div>
   </div>
 
@@ -902,11 +901,21 @@ function buildTree(files){
 // ═══ READ SOURCE FILES — parallel batches + live progress ═══
 async function readSrcFiles(files){
   S.srcContents=[];
-  const srcExts=new Set(['js','jsx','ts','tsx','mjs','cjs','py','rb','go','rs','java','cs','php','kt','swift','dart','cpp','c','h','ex','exs','hs','lua','r','scala','clj','fs','vue','svelte','elm','erl','ml']);
+  const srcExts=new Set([
+    // Source code
+    'js','jsx','ts','tsx','mjs','cjs','py','rb','go','rs','java','cs','php','kt','swift',
+    'dart','cpp','c','h','ex','exs','hs','lua','r','scala','clj','fs','vue','svelte','elm','erl','ml',
+    // Config & data files
+    'json','jsonc','json5','yaml','yml','toml','ini','env','properties','conf','config',
+    'xml','plist','gradle','xml','csproj','sln','editorconfig','gitignore','gitattributes',
+    'dockerfile','dockerignore','htaccess','nginx','sh','bash','zsh','fish','ps1','bat','cmd',
+    'prisma','graphql','gql','proto','tf','tfvars','hcl','makefile',
+    'md','mdx','txt','rst','adoc'
+  ]);
   const srcFiles=files
     .filter(f=>{const e=f.name.split('.').pop().toLowerCase();return srcExts.has(e)&&f.size<300000;})
     .sort((a,b)=>a.size-b.size)  // smallest first = fastest visible progress
-    .slice(0,150);
+    .slice(0,200);
   const BATCH=24;
   const total=srcFiles.length||1;
   let done=0;
@@ -924,13 +933,43 @@ async function readSrcFiles(files){
     await new Promise(r=>requestAnimationFrame(r));
   }
   document.getElementById('src-count').textContent=S.srcContents.length;
+    const cfgCount=S.srcContents.filter(f=>isConfigLang(f.lang)).length;
+    const cfgEl=document.getElementById('cfg-count');
+    if(cfgEl)cfgEl.textContent=cfgCount;
 }
 
 function getLang(name){
   const e=name.split('.').pop().toLowerCase();
-  return ({js:'javascript',jsx:'jsx',ts:'typescript',tsx:'tsx',py:'python',rb:'ruby',
-    go:'go',rs:'rust',java:'java',cs:'csharp',php:'php',kt:'kotlin',swift:'swift',
-    dart:'dart',cpp:'cpp',c:'c',vue:'vue',svelte:'svelte',ex:'elixir'})[e]||'text';
+  const n=name.toLowerCase();
+  // Special full-name matches
+  if(n==='dockerfile'||n.startsWith('dockerfile.'))return 'dockerfile';
+  if(n==='.env'||n.startsWith('.env.'))return 'env';
+  if(n==='makefile'||n==='gnumakefile')return 'makefile';
+  if(n==='.gitignore'||n==='.dockerignore'||n==='.gitattributes')return 'ignore';
+  if(n==='.editorconfig')return 'ini';
+  return ({
+    js:'javascript',jsx:'javascript',mjs:'javascript',cjs:'javascript',
+    ts:'typescript',tsx:'typescript',
+    py:'python',rb:'ruby',go:'go',rs:'rust',java:'java',cs:'csharp',
+    php:'php',kt:'kotlin',swift:'swift',dart:'dart',
+    cpp:'cpp',c:'c',h:'c',vue:'vue',svelte:'svelte',ex:'elixir',
+    // config/data
+    json:'json',jsonc:'json',json5:'json',
+    yaml:'yaml',yml:'yaml',
+    toml:'toml',ini:'ini',conf:'ini',properties:'ini',
+    xml:'xml',plist:'xml',csproj:'xml',
+    env:'env',
+    sh:'bash',bash:'bash',zsh:'bash',fish:'bash',
+    ps1:'powershell',bat:'batch',cmd:'batch',
+    tf:'hcl',tfvars:'hcl',hcl:'hcl',
+    graphql:'graphql',gql:'graphql',
+    proto:'protobuf',prisma:'prisma',
+    gradle:'groovy',
+    md:'markdown',mdx:'markdown',rst:'markdown',
+    txt:'text',dockerfile:'dockerfile',makefile:'makefile',
+    gitignore:'ignore',dockerignore:'ignore',
+    sln:'xml',
+  })[e]||'text';
 }
 
 // ═══ API DISCOVERY ═══
@@ -1202,6 +1241,7 @@ function renderAll(){
       ['pane-setup',renderSetup],
       ['pane-readme',renderReadme],
       ['pane-improve',renderImprove],
+      ['pane-configs',renderConfigs],
     ];
     let i=0;
     function renderNext(){
@@ -1241,7 +1281,7 @@ function renderOverview(){
   <p class="sdesc">${esc(a.purpose||'Software Project')}</p>
   <div class="cg">
     ${card('📄','Total Files',S.files.length,'in project')}
-    ${card('💻','Source Files',S.srcContents.length,'analyzed')}
+    ${card('💻','Files Read',S.srcContents.length,'src + config')}
     ${card('🔌','API Endpoints',(a.apis||[]).length,'discovered')}
     ${card('📦','Dependencies',(a.packages||[]).length,'packages')}
     ${card('🏗️','Layers',(a.layers||[]).length,'detected')}
@@ -1253,20 +1293,26 @@ function renderOverview(){
 }
 function card(ico,lbl,val,sub){return `<div class="card"><div class="ci">${ico}</div><div class="cl">${lbl}</div><div class="cv">${val}</div><div class="cs2">${sub}</div></div>`;}
 
+// ═══ CONFIG LANG DETECTOR ═══
+function isConfigLang(lang){
+  return ['json','yaml','toml','env','xml','ini','dockerfile','hcl','bash','powershell',
+    'batch','makefile','ignore','markdown','text','graphql','protobuf','prisma','groovy'].includes(lang);
+}
+
 // ═══ COMBINED SOURCE ═══
 function renderCombined(){
   const contents=S.srcContents;
-  if(!contents.length)return`<div style="padding:48px;text-align:center;color:var(--mist)">No source files found in this project.</div>`;
+  if(!contents.length)return`<div style="padding:48px;text-align:center;color:var(--mist)">No readable files found in this project.</div>`;
   const totalLines=contents.reduce((s,f)=>s+f.text.split('\n').length,0);
   let html=`
 <div class="stats-bar">
-  <div class="stat"><span class="stat-v">${contents.length}</span><span class="stat-l">Source Files</span></div>
+  <div class="stat"><span class="stat-v">${contents.length}</span><span class="stat-l">Files Read</span></div>
   <div class="stat"><span class="stat-v">${totalLines.toLocaleString()}</span><span class="stat-l">Lines</span></div>
   <div class="stat"><span class="stat-v">${S.files.length}</span><span class="stat-l">Total Files</span></div>
   <div class="stat"><span class="stat-v">${S.a.lang?.primary||'Mixed'}</span><span class="stat-l">Primary Lang</span></div>
 </div>
 <div class="comb-header">
-  <div><div class="comb-title">Combined Source Files</div><div class="comb-meta">${contents.length} files · ${totalLines.toLocaleString()} lines · annotated with role analysis</div></div>
+  <div><div class="comb-title">All Project Files</div><div class="comb-meta">${contents.length} files · ${totalLines.toLocaleString()} lines · annotated with role analysis</div></div>
   <div style="display:flex;gap:8px">
     <button class="ib" onclick="copyAllSrc()">📋 Copy All</button>
   </div>
@@ -1286,7 +1332,7 @@ function renderCombined(){
   <div class="fs-body">
     <div class="cb" style="border-radius:0;border-left:none;border-right:none;margin:0">
       <div class="cbh"><span class="cbl">${esc(f.lang)} — ${esc(f.name)}</span><button class="cpb">📋 Copy</button></div>
-      <pre>${addLn(hlSrc(f.text,f.lang))}</pre>
+      <pre>${addLn(isConfigLang(f.lang)?hlConfig(f.text,f.lang):hlSrc(f.text,f.lang))}</pre>
     </div>
   </div>
 </div>`;
@@ -1321,6 +1367,17 @@ function analyzeRole(path,text,lang){
   if(parts.includes('middleware')||/middleware|\.use\(|next\(\)/i.test(text))
     result.types.push({label:'Middleware',cls:'rt-mw'});
   if(parts.includes('config')||/appsettings|settings\.|config\./i.test(text)||['settings.py','config.js','config.ts'].includes(path.split('/').pop()))
+    result.types.push({label:'Config',cls:'rt-cfg'});
+  // config/data file detection
+  const configNames=['appsettings','appsettings.development','appsettings.production',
+    'appsettings.staging','web.config','app.config','settings','config','.env',
+    'docker-compose','dockerfile','package.json','.eslintrc','tsconfig','jest.config',
+    'vite.config','next.config','nuxt.config','webpack.config','babel.config',
+    'requirements.txt','pyproject.toml','setup.py','cargo.toml','go.mod','gemfile',
+    'build.gradle','pom.xml','launcher','launchsettings'];
+  const fname=path.split('/').pop().toLowerCase().replace(/\.json$|\.xml$|\.yml$|\.yaml$|\.toml$|\.ini$/,'');
+  if(lang==='json'||lang==='yaml'||lang==='toml'||lang==='xml'||lang==='env'||lang==='ini'||
+     lang==='dockerfile'||lang==='hcl'||lang==='makefile'||configNames.some(n=>fname.includes(n)))
     result.types.push({label:'Config',cls:'rt-cfg'});
   if(!result.types.length)result.types.push({label:'Source',cls:'rt-generic'});
   // explanation
@@ -1546,6 +1603,111 @@ function renderImprove(){
 </div>`;
 }
 
+
+// ═══ CONFIG FILES TAB ═══
+function renderConfigs(){
+  const cfgLangs=new Set(['json','yaml','toml','env','xml','ini','dockerfile','hcl',
+    'bash','powershell','batch','makefile','ignore','markdown','graphql','protobuf',
+    'prisma','groovy','properties']);
+  const cfgNamePatterns=[
+    'appsettings','appsettings.development','appsettings.production','appsettings.staging',
+    'appsettings.test','web.config','app.config','launchsettings',
+    'package.json','tsconfig','jest.config','vite.config','next.config','nuxt.config',
+    'webpack.config','babel.config','eslint','prettier','svelte.config',
+    'requirements','pyproject','setup.py','setup.cfg','cargo','go.mod','go.sum',
+    'gemfile','rakefile','build.gradle','pom','settings.gradle',
+    'dockerfile','docker-compose','.env','.gitignore','.gitattributes','.editorconfig',
+    'makefile','procfile','runtime.txt','vercel.json','netlify.toml',
+    'terraform','variables.tf','outputs.tf','main.tf',
+    'nginx.conf','apache.conf','.htaccess','nginx','server','deployment','launch'
+  ];
+  
+  const configs=S.srcContents.filter(f=>{
+    const lang=f.lang;
+    const fname=f.name.toLowerCase();
+    const fbase=fname.replace(/\.[^.]+$/,'');
+    return cfgLangs.has(lang) || cfgNamePatterns.some(p=>fname.includes(p)||fbase===p);
+  });
+
+  if(!configs.length) return `<div class="sec-wrap"><div class="call call-w"><strong>⚠ No Config Files Found</strong>No configuration files were detected. Import a project containing .json, .yaml, .toml, .env, .xml, Dockerfile, or similar files.</div></div>`;
+
+  // Group by type
+  const groups={
+    'App Settings':[], 'Environment':[], 'Build & Tooling':[], 
+    'Containers & Infra':[], 'Database & Schema':[], 'Other':[]
+  };
+  for(const f of configs){
+    const fn=f.name.toLowerCase();
+    if(/appsettings|web\.config|app\.config|launchsettings|\.env|properties/i.test(fn) || f.lang==='env')
+      groups['App Settings'].push(f);
+    else if(/package\.json|tsconfig|eslint|prettier|babel|vite|next\.config|webpack|jest|svelte\.config|nuxt/i.test(fn))
+      groups['Build & Tooling'].push(f);
+    else if(/dockerfile|docker-compose|\.yml$|kubernetes|k8s|helm|terraform|\.tf$|vercel|netlify|heroku|procfile|runtime/i.test(fn) || f.lang==='hcl')
+      groups['Containers & Infra'].push(f);
+    else if(/prisma|schema|migration|\.sql$|graphql|proto/i.test(fn) || f.lang==='graphql'||f.lang==='protobuf'||f.lang==='prisma')
+      groups['Database & Schema'].push(f);
+    else if(/requirements|pyproject|cargo|gemfile|go\.mod|pom|gradle|makefile/i.test(fn))
+      groups['Build & Tooling'].push(f);
+    else
+      groups['Other'].push(f);
+  }
+
+  const configIcon={
+    'json':'📋','yaml':'⚙️','toml':'⚙️','env':'🔑','xml':'📄',
+    'ini':'⚙️','dockerfile':'🐳','hcl':'🏗️','bash':'💲','makefile':'🔨',
+    'markdown':'📝','graphql':'🔷','prisma':'🗄️','protobuf':'📡','ignore':'🙈'
+  };
+
+  let html=`<div class="sec-wrap">
+  <div class="sbadge">⚙️ Config Files</div>
+  <h2 class="stitle">Configuration & Data Files</h2>
+  <p class="sdesc">${configs.length} config file${configs.length!==1?'s':''} found — click any file to expand, copy individual files or copy all at once.</p>
+  <div class="cg" style="margin-bottom:24px">
+    ${Object.entries(groups).filter(([,v])=>v.length).map(([k,v])=>`<div class="card"><div class="ci">${k==='App Settings'?'⚙️':k==='Environment'?'🔑':k==='Build & Tooling'?'🛠️':k==='Containers & Infra'?'🐳':k==='Database & Schema'?'🗄️':'📄'}</div><div class="cl">${k}</div><div class="cv">${v.length}</div><div class="cs2">file${v.length!==1?'s':''}</div></div>`).join('')}
+  </div>
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:16px">
+    <button class="ib" onclick="copyAllConfigs()">📋 Copy All Config Files</button>
+  </div>`;
+
+  for(const [grpName,files] of Object.entries(groups)){
+    if(!files.length) continue;
+    html+=`<div style="margin-bottom:8px;font-family:var(--ff-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);padding:8px 0 4px;border-bottom:1px solid var(--wire)">${grpName}</div>`;
+    for(const f of files){
+      const ico=configIcon[f.lang]||'📄';
+      const lines=f.text.split('\n').length;
+      html+=`
+<div class="fs-sec" style="margin-bottom:8px">
+  <div class="fs-head" onclick="toggleFsSec(this)">
+    <span>${ico}</span>
+    <span style="font-family:var(--ff-mono);font-weight:600;font-size:12.5px;color:#fde047">${esc(f.name)}</span>
+    <span style="font-size:10.5px;color:var(--mist)">${esc(f.path.split('/').slice(0,-1).join(' › '))}</span>
+    <span style="font-size:10px;color:var(--mist);margin-left:auto;white-space:nowrap">${lines} lines · ${f.lang}</span>
+  </div>
+  <div class="fs-body">
+    <div class="cb" style="border-radius:0;border-left:none;border-right:none;margin:0">
+      <div class="cbh">
+        <span class="cbl">${esc(f.lang)} — ${esc(f.path)}</span>
+        <button class="cpb">📋 Copy</button>
+      </div>
+      <pre>${addLn(hlConfig(f.text,f.lang))}</pre>
+    </div>
+  </div>
+</div>`;
+    }
+  }
+  html+=`</div>`;
+  return html;
+}
+
+function copyAllConfigs(){
+  const cfgLangs=new Set(['json','yaml','toml','env','xml','ini','dockerfile','hcl',
+    'bash','powershell','batch','makefile','ignore','markdown','graphql','protobuf','prisma','groovy']);
+  const configs=S.srcContents.filter(f=>cfgLangs.has(f.lang));
+  const text=configs.map(f=>`// ===== ${f.path} =====\n${f.text}`).join('\n\n');
+  navigator.clipboard?.writeText(text).then(()=>toast('✓ All config files copied'));
+}
+
+
 // ═══ SYNTAX HIGHLIGHT ═══
 function hlSrc(code,lang){
   let t=esc(code);
@@ -1568,6 +1730,100 @@ function hlSrc(code,lang){
   t=t.replace(/(\/\/[^\n]*|#[^\n]*|\/\*[\s\S]*?\*\/)/g,'<span class="cm">$1</span>');
   // decorators/attributes
   t=t.replace(/(@\w+|#\[\w+\]|\[[\w,\s]+\])/g,'<span class="at">$1</span>');
+  return t;
+}
+
+// ── CONFIG / DATA FILE HIGHLIGHTER ──────────────────────────────────────
+function hlConfig(code, lang){
+  let t=esc(code);
+  if(lang==='json'||lang==='json5'||lang==='jsonc'){
+    // keys
+    t=t.replace(/"([^"]+)"\s*:/g,'<span class="at">"$1"</span>:');
+    // string values
+    t=t.replace(/:\s*"([^"]*)"/g,': <span class="str">"$1"</span>');
+    // booleans/null
+    t=t.replace(/:\s*(true|false|null)(\s*[,\}\]])/g,': <span class="kw">$1</span>$2');
+    // numbers
+    t=t.replace(/:\s*(-?\d+\.?\d*)/g,': <span class="nm">$1</span>');
+    // comments (jsonc)
+    t=t.replace(/(\/\/[^\n]*)/g,'<span class="cm">$1</span>');
+    return t;
+  }
+  if(lang==='yaml'){
+    // keys
+    t=t.replace(/^(\s*)([\w\-\.]+)(\s*:)/gm,'$1<span class="at">$2</span>$3');
+    // string values in quotes
+    t=t.replace(/:\s*(['"][^'"]*['"])/g,': <span class="str">$1</span>');
+    // booleans
+    t=t.replace(/:\s*(true|false|null|~)(\s*$)/gm,': <span class="kw">$1</span>$2');
+    // numbers
+    t=t.replace(/:\s*(-?\d+\.?\d*)\s*$/gm,': <span class="nm">$1</span>');
+    // comments
+    t=t.replace(/(#[^\n]*)/g,'<span class="cm">$1</span>');
+    // list items
+    t=t.replace(/^(\s*-\s)/gm,'<span class="nm">$1</span>');
+    return t;
+  }
+  if(lang==='toml'){
+    // sections
+    t=t.replace(/^(\[+[^\]]+\]+)/gm,'<span class="at">$1</span>');
+    // keys
+    t=t.replace(/^([\w\-\.]+)(\s*=)/gm,'<span class="fn">$1</span>$2');
+    // string values
+    t=t.replace(/=\s*("([^"]*)")/g,'= <span class="str">$1</span>');
+    // booleans
+    t=t.replace(/=\s*(true|false)/g,'= <span class="kw">$1</span>');
+    // numbers
+    t=t.replace(/=\s*(-?\d+\.?\d*)/g,'= <span class="nm">$1</span>');
+    // comments
+    t=t.replace(/(#[^\n]*)/g,'<span class="cm">$1</span>');
+    return t;
+  }
+  if(lang==='env'){
+    // keys before =
+    t=t.replace(/^([\w]+)(=)/gm,'<span class="at">$1</span>$2');
+    // values after =
+    t=t.replace(/=(.*)/gm,'=<span class="str">$1</span>');
+    // comments
+    t=t.replace(/(#[^\n]*)/g,'<span class="cm">$1</span>');
+    return t;
+  }
+  if(lang==='xml'){
+    // tags
+    t=t.replace(/&lt;\/?(\w[\w:.-]*)/g,'&lt;<span class="kw">$1</span>');
+    // attributes
+    t=t.replace(/([\w:.-]+)=(&quot;[^&]*?&quot;)/g,'<span class="at">$1</span>=<span class="str">$2</span>');
+    // comments
+    t=t.replace(/(&lt;!--[\s\S]*?--&gt;)/g,'<span class="cm">$1</span>');
+    return t;
+  }
+  if(lang==='ini'||lang==='properties'){
+    // sections
+    t=t.replace(/^(\[[^\]]+\])/gm,'<span class="at">$1</span>');
+    // keys
+    t=t.replace(/^([\w.\-]+)(\s*[=:])/gm,'<span class="fn">$1</span>$2');
+    // comments
+    t=t.replace(/^([#;][^\n]*)/gm,'<span class="cm">$1</span>');
+    return t;
+  }
+  if(lang==='dockerfile'){
+    t=t.replace(/^(FROM|RUN|CMD|EXPOSE|ENV|ADD|COPY|ENTRYPOINT|VOLUME|USER|WORKDIR|ARG|LABEL|STOPSIGNAL|HEALTHCHECK|SHELL|ONBUILD)\b/gm,'<span class="kw">$1</span>');
+    t=t.replace(/(#[^\n]*)/g,'<span class="cm">$1</span>');
+    return t;
+  }
+  if(lang==='bash'||lang==='makefile'){
+    t=t.replace(/^(export\s+|if\s+|fi|for\s+|do|done|while\s+|case\s+|esac|function\s+)/gm,'<span class="kw">$1</span>');
+    t=t.replace(/("([^"]*)")/g,'<span class="str">$1</span>');
+    t=t.replace(/(#[^\n]*)/g,'<span class="cm">$1</span>');
+    return t;
+  }
+  if(lang==='markdown'){
+    t=t.replace(/^(#{1,6}\s.+)$/gm,'<span class="at">$1</span>');
+    t=t.replace(/(`[^`]+`)/g,'<span class="str">$1</span>');
+    t=t.replace(/^(```[\s\S]*?```)/gm,'<span class="cm">$1</span>');
+    return t;
+  }
+  // fallback
   return t;
 }
 
@@ -1650,10 +1906,11 @@ function updateSidebar(){
   <div class="ssc"><span class="ssc-v">${S.a.lang?.primary?.slice(0,4)||'?'}</span><span class="ssc-l">Lang</span></div>
 </div>`;
   const navLinks=[
-    ['📋','Overview','overview'],['🔗','Source Files','combined'],
+    ['📋','Overview','overview'],['🔗','All Files','combined'],
     ['🏗️','Architecture','arch'],['🔌','API Docs','api'],
     ['⚙️','Tech Stack','stack'],['🚀','Setup Guide','setup'],
     ['📝','README','readme'],['💡','Improve','improve'],
+    ['⚙️','Config Files','configs'],
   ];
   document.getElementById('sb-inner').innerHTML=`
 <div class="sb-section">
